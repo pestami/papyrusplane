@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Joystick Button Template</title>
+	<style>
+		.joystick {
+			width: 200px;
+			height: 200px;
+			border: 1px solid #ccc;
+			border-radius: 50%;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			position: relative;
+		}
+		
+		.joystick-handle {
+			width: 50px;
+			height: 50px;
+			border: 1px solid #ccc;
+			border-radius: 50%;
+			background-color: #fff;
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+		}
+		
+		.face-button {
+			width: 30px;
+			height: 30px;
+			border: none;
+			border-radius: 50%;
+			background-color: #4CAF50;
+			color: #fff;
+			cursor: pointer;
+		}
+		
+		.dpad-button {
+			width: 20px;
+			height: 20px;
+			border: none;
+			border-radius: 50%;
+			background-color: #4CAF50;
+			color: #fff;
+			cursor: pointer;
+		}
+		
+		table {
+			background-color: #f0f0f0;
+			border-collapse: collapse;
+		}
+		
+		th, td {
+			border: 1px solid #ccc;
+			padding: 10px;
+			text-align: center;
+		}
+	</style>
+</head>
+<body>
+	<table>
+		<tr>
+			<th colspan="2">Joystick</th>
+			<th colspan="3">D-Pad</th>
+		</tr>
+		<tr>
+			<td><button class="face-button" onclick="buttonXClicked()">X</button></td>
+			<td><button class="face-button" onclick="buttonYClicked()">Y</button></td>
+			<td></td>
+			<td><button class="dpad-button" onclick="dpadUpClicked()">↑</button></td>
+			<td></td>
+		</tr>
+		<tr>
+			<td><button class="face-button" onclick="buttonAClicked()">A</button></td>
+			<td><button class="face-button" onclick="buttonBClicked()">B</button></td>
+			<td><button class="dpad-button" onclick="dpadLeftClicked()">←</button></td>
+			<td></td>
+			<td><button class="dpad-button" onclick="dpadRightClicked()">→</button></td>
+		</tr>
+		<tr>
+			<td></td>
+			<td></td>
+			
+			<td></td>
+			<td><button class="dpad-button" onclick="dpadDownClicked()">↓</button></td>
+			<td></td>
+		</tr>
+	</table>
+	
+	<script>
+		function buttonXClicked() {
+			alert("Button X clicked!");
+			console.log("Button X clicked!");
+		}
+		
+		function buttonYClicked() {
+			alert("Button Y clicked!");
+			console.log("Button Y clicked!");
+		}
+		
+		function buttonAClicked() {
+			alert("Button A clicked!");
+			console.log("Button A clicked!");
+		}
+		
+		function buttonBClicked() {
+			alert("Button B clicked!");
+			console.log("Button B clicked!");
+		}
+		
+		function dpadUpClicked() {
+			alert("D-pad up clicked!");
+			console.log("D-pad up clicked!");
+		}
+		
+		function dpadDownClicked() {
+			alert("D-pad down clicked!");
+			console.log("D-pad down clicked!");
+		}
+		
+		function dpadLeftClicked() {
+			alert("D-pad left clicked!");
+			console.log("D-pad left clicked!");
+		}
+		
+		function dpadRightClicked() {
+			alert("D-pad right clicked!");
+			console.log("D-pad right clicked!");
+		}
+	</script>
+</body>
+</html>
