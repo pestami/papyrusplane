@@ -46,38 +46,33 @@
     console.log("Slider 1 changed to: " + value);
       document.getElementById("slider1-value").innerHTML = value;
     // Add your code here to handle the slider change event
-    sendRequest("MOTORL_PWM",value);
   }
 
   function slider2Changed(value) {
     console.log("Slider 2 changed to: " + value);      
     document.getElementById("slider2-value").innerHTML = value;
     // Add your code here to handle the slider change event
-    sendRequest("MOTORR_PWM",value);
   }
 
   function button1Clicked() {
     console.log("Button 1 clicked: Enable WLAN");
     // Add your code here to handle the button click event
-      sendRequest("MOTORL",1);
+      sendRequest("LED",1);
   }
 
   function button2Clicked() {
     console.log("Button 2 clicked: Disable WLAN");
     // Add your code here to handle the button click event
-    sendRequest("MOTORL",0);
   }
 
   function button3Clicked() {
     console.log("Button 3 clicked: Restart WLAN");
     // Add your code here to handle the button click event
-    sendRequest("MOTORR",1);
   }
 
   function button4Clicked() {
     console.log("Button 4 clicked: Reset WLAN");
     // Add your code here to handle the button click event
-    sendRequest("MOTORR",0);
   }
     //---------------------------------------------------------
         // Function to send the POST request
@@ -90,7 +85,7 @@
                     'Content-Type': 'application/json'
                 },
                 //body: JSON.stringify({ "LED": status,"LED2": status })
-                body: JSON.stringify({ [KEY]: value })
+                body: JSON.stringify({ KEY: value })
             })
             .then(response => response.text())
             .then(data => console.log(data))

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toggle LED</title>
+    <style>
+        /* Style for the button */
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <button id="toggleButton">Turn LED pin low</button>
+
+    <script>
+        let ledStatus = true; // Initial status: high
+//---------------------------------------------------------
+        // Function to send the POST request
+        // { "LED": status , "PWM": "hello"}
+        function sendRequest(status) {
+            fetch('/api/pins', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ "LED": status,"LED2": status })
+            })
+            .then(response => response.text())
+            .then(data => console.log(data))
+            .catch(error => console.error('Error:', error));
+        }
+//---------------------------------------------------------
+        // Event listener for the button
+        document.getElementById('toggleButton').addEventListener('click', function() {
+            ledStatus = !ledStatus; // Toggle status
+            sendRequest(ledStatus); // Send request
+
+            // Update button text
+            if (ledStatus) {
+                this.textContent = 'Turn LED pin low';
+            } else {
+                this.textContent = 'Turn LED pin high';
+            }
+        });
+    </script>
+</body>
+</html>
