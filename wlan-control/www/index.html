@@ -21,12 +21,12 @@
     </tr> 
   <tr>
     <td>
-      <input type="range" id="slider1" min="0" max="100" value="50" style="transform: rotate(-90deg); height: 200px; width: 200px;" onchange="slider1Changed(this.value)">
-        <span id="slider1-value">50</span>
+      <input type="range" id="slider1" min="0" max="100" value="0" style="transform: rotate(-90deg); height: 200px; width: 200px;" onchange="slider1Changed(this.value)">
+        
       </td>
     <td>
       <button id="button1" onclick="button1Clicked()">Engine Start</button><br>
-      <button id="button2" onclick="button2Clicked()">Engine Stoop</button><br>
+      <button id="button2" onclick="button2Clicked()">Engine Stop</button><br>
 
     </td>
      <td>
@@ -35,8 +35,19 @@
       <button id="button4" onclick="button4Clicked()">Engine Stop</button>
     </td>
     <td>
-      <input type="range" id="slider2" min="0" max="100" value="50" style="transform: rotate(-90deg); height: 200px; width: 200px;" onchange="slider2Changed(this.value)">
-    <span id="slider2-value">50</span>
+      <input type="range" id="slider2" min="0" max="100" value="0" style="transform: rotate(-90deg); height: 200px; width: 200px;" onchange="slider2Changed(this.value)">
+    
+      </td>
+  </tr>
+  <tr>
+      <td style="border: 1px solid black" id="Lduty">0</td>
+      <td style="border: 1px solid black"  id="Lstatus">0</td>
+      <td style="border: 1px solid black"  id="Rstatus">0</td>
+      <td style="border: 1px solid black"  id="Rduty">0</td>
+  </tr> 
+ <tr>
+     <td style="border: 1px solid black; text-align: centre" colspan="4">
+          <span id="debug_echo" > .....</span>
       </td>
   </tr>
 </table>
@@ -44,46 +55,70 @@
 <script>
   function slider1Changed(value) {
     console.log("Slider 1 changed to: " + value);
-      document.getElementById("slider1-value").innerHTML = value;
+      document.getElementById("Lduty").innerHTML = value;
     // Add your code here to handle the slider change event
-    sendRequest("MOTORL_PWM",value);
+    //sendRequest("MOTORL_PWM",value);
+      sendRequestFull();
   }
 
   function slider2Changed(value) {
     console.log("Slider 2 changed to: " + value);      
-    document.getElementById("slider2-value").innerHTML = value;
+    document.getElementById("Rduty").innerHTML = value;
     // Add your code here to handle the slider change event
-    sendRequest("MOTORR_PWM",value);
+    //sendRequest("MOTORR_PWM",value);
+      sendRequestFull();
   }
 
   function button1Clicked() {
     console.log("Button 1 clicked: Enable WLAN");
+      document.getElementById("Lstatus").innerHTML = 1;
     // Add your code here to handle the button click event
-      sendRequest("MOTORL",1);
+      //sendRequest("MOTORL",1);
+      sendRequestFull();
   }
 
   function button2Clicked() {
     console.log("Button 2 clicked: Disable WLAN");
     // Add your code here to handle the button click event
-    sendRequest("MOTORL",0);
+       document.getElementById("Lstatus").innerHTML = 0;
+    //sendRequest("MOTORL",0);
+      sendRequestFull();
   }
 
   function button3Clicked() {
     console.log("Button 3 clicked: Restart WLAN");
     // Add your code here to handle the button click event
-    sendRequest("MOTORR",1);
+       document.getElementById("Rstatus").innerHTML = 1;
+        //sendRequest("MOTORR",1);
+      sendRequestFull();
   }
 
   function button4Clicked() {
     console.log("Button 4 clicked: Reset WLAN");
     // Add your code here to handle the button click event
-    sendRequest("MOTORR",0);
+       document.getElementById("Rstatus").innerHTML = 0;
+        //sendRequest("MOTORR",0);
+        sendRequestFull();
   }
+  function debug_print(smessage) 
+        {   
+            smessage_pre=document.getElementById("debug_echo").innerHTML;
+            
+            smessage= smessage_pre +" | "+ smessage;
+            
+            document.getElementById("debug_echo").innerHTML =smessage.slice(-80);
+        }
+      function debug_print2(smessage) 
+        {   
+            document.getElementById("debug_echo").innerHTML =smessage;
+        }
     //---------------------------------------------------------
         // Function to send the POST request
         // { "LED": status , "PWM": "hello"}
         function sendRequest(KEY, value) 
         {
+            deug_print(KEY +":"+ value);
+            
             fetch('/api/pins', {
                 method: 'POST',
                 headers: {
@@ -96,6 +131,31 @@
             .then(data => console.log(data))
             .catch(error => console.error('Error:', error));
         }
+    
+        function sendRequestFull() 
+        {
+            value1=document.getElementById("Lduty").innerHTML;
+            value2=document.getElementById("Lstatus").innerHTML;
+            value3=document.getElementById("Rduty").innerHTML;
+            value4=document.getElementById("Rstatus").innerHTML;
+            
+            debug_print2("Lduty:" + value1 + ";" + "Lstatus" + value2 + ";" + "Rduty:" + value3 + ";" + "Rstatus:" + value4 );
+            
+            fetch('/api/pins', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                
+                body: JSON.stringify({ "MOTORL_PWM": value1, "MOTORL": value2, "MOTORR_PWM": value3, "MOTORR": value4  })
+            })
+            .then(response => response.text())
+            .then(data => console.log(data))
+            .catch(error => console.error('Error:', error));
+        }
+    
+
+            
 //---------------------------------------------------------
 </script>
 </body>
