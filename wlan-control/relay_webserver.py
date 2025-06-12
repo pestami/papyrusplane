@@ -24,6 +24,8 @@ import network
 from machine import Pin
 from users_machine import my_machine
 
+mpa_machine=my_machine()
+
 try:
     from secrets import secrets
 except ImportError:
@@ -211,7 +213,7 @@ async def handle_request(reader, writer):
         try:
             props = json.loads(body)
             #==================================
-            my_machine.do_commands(props) 
+            mpa_machine.do_commands(props) 
             #==================================
             #for pin_name, new_value in props.items():
             #    try:

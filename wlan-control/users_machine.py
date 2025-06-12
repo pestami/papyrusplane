@@ -1,10 +1,16 @@
 # users_machine.py
 
-class my_machine:
-   
-    def do_commands(machine_cmd):
+from machine import Pin, PWM
 
-        from machine import Pin, PWM
+
+class my_machine:
+
+    def __init__(self):
+
+      
+   
+    def do_commands(self,machine_cmd):
+     
       
         print("-----my_machine command-----")
         print(machine_cmd)
@@ -22,7 +28,7 @@ class my_machine:
         print(f"Duty Left: {ndutyL}")
         
         
-        motorL = PWM(Pin(22,Pin.OUT), freq = 5000, duty = int(ndutyL))
+#         motorL = PWM(Pin(22,Pin.OUT), freq = 5000, duty = int(ndutyL))
         
 #         MOTORR= machine_cmd.get["Lstatus"]
 #         MOTORR_PWM= machine_cmd.get["Lduty"]
