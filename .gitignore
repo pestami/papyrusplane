@@ -1,2 +1,4 @@
 
 *.ods#
+
+wlan-control/secrets.py
