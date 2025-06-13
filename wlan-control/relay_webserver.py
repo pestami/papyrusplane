@@ -22,10 +22,10 @@ import uasyncio
 import network
 
 from machine import Pin
-
+#==MPA CODE===============================
 from users_machine import my_machine
 mpa_machine=my_machine()
-
+#=========================================
 try:
     from secrets import secrets
 except ImportError:
@@ -212,9 +212,9 @@ async def handle_request(reader, writer):
     if method == "POST":
         try:
             props = json.loads(body)
-            #==================================
-            #####mpa_machine.do_commands(props) 
-            #==================================
+            #==MPA CODE===============================
+            mpa_machine.do_commands(props) 
+            #========================================
             #for pin_name, new_value in props.items():
             #    try:
             #        pin = pin_cache[pin_name]
