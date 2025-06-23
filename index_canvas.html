@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>XY Plane Selection</title>
+
+  <style>
+    #mycanvas {
+      border: 2px solid black;
+
+    }
+  </style>
+
+</head>
+<body>
+ 
+    <p id="selected-point">SELECTED POINT</p>
+    <canvas id="mycanvas" width="1000" height="500"> </canvas>
+	<script src="https://cdn.jsdelivr.net/npm/mathjs@11.6.1/dist/math.min.js"></script>
+	
+	 <p id="DEBUG">debug</p>
+	
+	
+  <script>
+
+    let mycanvas = document.getElementById('mycanvas');
+    let ctx = mycanvas.getContext('2d');
+	
+	//ctx.mycanvas.width=500
+	//ctx.mycanvas.hight=500
+	mycanvas.style.background = "lightblue";
+	
+    let selectedPoint = document.getElementById('selected-point');
+
+    // Draw the XY plane:
+    ctx.scale=(2,2)
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.lineTo(500, 500);
+	ctx.lineTo(1000, 0);
+    ctx.stroke();
+
+    // =============================Handle mouse click event
+    mycanvas.addEventListener('mousedown', 
+    function(event) 
+        {
+          let rect = mycanvas.getBoundingClientRect();
+			
+			Xmax = rect.width; 
+			Ymax = rect.height; 
+
+          let x =  + event.clientX; // adjust x to be relative to the origin
+          let y = + event.clientY; // adjust y to be relative to the origin
+		  
+		 // alert( y)			
+			vector = [x, y]; // Original vector
+			angle = -45; // Rotation angle in degrees
+			rotatedVector = rotateVector(vector, angle);
+			
+			AP=[x,y]
+			AB=[500,500]
+			BC=[500,-500]
+			BP=subtractVectors(AB,AP)
+			
+			tempA=dotProduct(BP, BC)/magnitude(BP)/magnitude(BC)
+			Theta= Math.acos(tempA)* (180 / Math.PI) // degrees
+			
+			L1=magnitude(BP)*Math.cos(Theta+Math.PI/180)
+			L2=magnitude(BP)*Math.sin(Theta+Math.PI/180)
+			
+			//px=Math.abs(rotatedVector[0]);
+			//py=Math.abs(rotatedVector[1]);
+			
+						
+			//drawLine(00,00,L1,py,2,"pink")
+			//drawLine(00,00,x,y,2,"orange")
+			
+			drawLine(500,500,0,0,22,"black")
+			drawLine(500,500,L1,L1,20,"green")
+			
+			drawLine(500,500,1000,0,22,"black")
+			drawLine(500,500,1000-L1,L1,20,"blue")
+			
+			plotPoint(x,y,4,"red");
+			drawLine(500,500,x,y,2,"orange")
+			//plotPoint(px,py,4,"blue");
+			//ctx.fillStyle = "blue";
+			//ctx.fillRect(10, 10, 400, 400);
+			
+			          // Display the selected point value
+			sTEXT=`X: ${x.toFixed(0)} , Y: ${y.toFixed(0)} , Angle: ${Theta.toFixed(0)}`;
+			sTEXT=sTEXT + '\n' + `POWER L: ${L1.toFixed(0)} /, POWER R: ${L2.toFixed(0)}`;
+			selectedPoint.innerText = sTEXT;
+			
+			sTEXT=`BPx: ${BP[0].toFixed(0)} BPy: ${BP[1].toFixed(0)}`
+			DEBUG.innerText = sTEXT;
+        }
+    );
+	//===================================================================================
+		function plotPoint(x, y, radius = 2,color) 
+		{
+		ctx.beginPath(); // Start a new path
+		ctx.arc(x, y, radius, 0, Math.PI * 2); // Create a circle
+		ctx.fillStyle = color; // Set the fill color
+		ctx.fill(); // Fill the circle
+		}
+
+		function drawLine(x1, y1, x2, y2, thickness, color) 
+			{
+            ctx.lineWidth = thickness; // Set the line thickness
+            ctx.strokeStyle = color; // Set the line color
+            ctx.beginPath(); // Start a new path
+            ctx.moveTo(x1, y1); // Move to the starting point
+            ctx.lineTo(x2, y2); // Draw a line to the ending point
+            ctx.stroke(); // Render the line		.stroke(); // Render the line
+			}
+		
+		function rotateVector(vector, angleInDegrees) 
+			{
+				const angleInRadians = angleInDegrees * (Math.PI / 180); // Convert degrees to radians
+				const cosTheta = Math.cos(angleInRadians);
+				const sinTheta = Math.sin(angleInRadians);
+
+				const x = vector[0];
+				const y = vector[1];
+
+				// Apply the rotation matrix
+				const rotatedX = x * cosTheta - y * sinTheta;
+				const rotatedY = x * sinTheta + y * cosTheta;
+
+				return [rotatedX, rotatedY];
+			}
+			
+		function subtractVectors(v1, v2) 
+			{
+			return [v1[0] - v2[0], v1[1] - v2[1]];
+			}
+		function magnitude(v) 
+			{
+			return Math.sqrt(v[0] ** 2 + v[1] ** 2);
+			}
+		function dotProduct(v1, v2) 
+			{
+			
+			return v1[0] * v2[0] + v1[1] * v2[1];
+			}
+	
+	
+
+    // =============================Handle mouse click event
+  </script>
+
+</body>
+</html>
