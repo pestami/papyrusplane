@@ -18,7 +18,7 @@
 <table>	 	 <tr>
 		<td style="border: 1px solid black; text-align: centre" colspan="4">
 		
-           <canvas id="mycanvas" width="500" height="500"> </canvas>
+           <canvas id="mycanvas" width="600" height="600"> </canvas>
 		</td>
 	</tr>	
 	 <tr>
@@ -45,8 +45,8 @@
 	<tr>
 		<td style="border: 1px solid black"> Lduty</td>
 		<td style="border: 1px solid black"> Lstatus</td>
-		<td style="border: 1px solid black">  Rduty</td>
-		<td style="border: 1px solid black">  Rstatus</td>
+		<td style="border: 1px solid black"> Rduty</td>
+		<td style="border: 1px solid black"> Rstatus</td>
 		
 	</tr> 
 		<tr>
@@ -74,8 +74,9 @@
 
     let mycanvas = document.getElementById('mycanvas');
     let ctx = mycanvas.getContext('2d');
-
 	mycanvas.style.background = "lightblue";
+    drawLine(500,0,500,600,5,"black");			
+	drawLine(0,500,600,500,5,"black");
 	
     let selectedPoint = document.getElementById('selected-point');
 
@@ -109,13 +110,35 @@
 			drawLine(0,0,500,0,50,"black");			
 			drawLine(0,0,0,500,50,"black");
 			
+            if (x<500 && y<500)
+            {
 			drawLine(0,0,x,0,20,"green");
 			drawLine(0,0,0,y,20,"green");
+            }
+
+             if (x>500 )
+            {Lstatus.innerText=0;
+            }
+            else
+            {
+                Lstatus.innerText=1;
+            }
+            if (y>500 )
+            {
+			   Rstatus.innerText=0;
+            }
+            else
+            {   
+                Rstatus.innerText=1;
+            }
+
 			// Prepare JASON
+
 			Lduty.innerText = (x/500*100).toFixed(0);
+
 			Rduty.innerText = (y/500*100).toFixed(0);
-			Lstatus.innerText = 1;
-			Rstatus.innerText = 1;
+
+
 			
 			// Display the selected point value
 			sTEXT=`X: ${x.toFixed(0)} , Y: ${y.toFixed(0)} `;
