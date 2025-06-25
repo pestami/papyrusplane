@@ -67,26 +67,36 @@
 			L1=magnitude(BP)*Math.cos(Theta+Math.PI/180)
 			L2=magnitude(BP)*Math.sin(Theta+Math.PI/180)
 			
+			
+			plotPoint(x,y,4,"red");
+			drawLine(500,500,x,y,2,"orange")
+			
 			//px=Math.abs(rotatedVector[0]);
 			//py=Math.abs(rotatedVector[1]);
 			
 						
 			//drawLine(00,00,L1,py,2,"pink")
 			//drawLine(00,00,x,y,2,"orange")
+			nABS_UNIT_VECTOR=magnitude([1,1]);
 			
-			drawLine(500,500,0,0,22,"black")
-			drawLine(500,500,L1,L1,20,"green")
 			
-			drawLine(500,500,1000,0,22,"black")
-			drawLine(500,500,1000-L1,L1,20,"blue")
+			drawLine(500,500,0,0,22,"black");
+			drawLine(500,500,L1,L1,20,"green");
+			drawLine(0,0,0,500,22,"black");
+			drawLine(0,500,0,500-L1,20,"green");
 			
-			plotPoint(x,y,4,"red");
-			drawLine(500,500,x,y,2,"orange")
+			drawLine(500,500,1000,0,22,"black");
+			drawLine(500,500,1000-L2,L2,20,"blue");			
+			drawLine(1000,500,1000,0,22,"black");
+			drawLine(1000,500,1000,500-L2,20,"blue");
+			
+			
+			
 			//plotPoint(px,py,4,"blue");
 			//ctx.fillStyle = "blue";
 			//ctx.fillRect(10, 10, 400, 400);
 			
-			          // Display the selected point value
+			// Display the selected point value
 			sTEXT=`X: ${x.toFixed(0)} , Y: ${y.toFixed(0)} , Angle: ${Theta.toFixed(0)}`;
 			sTEXT=sTEXT + '\n' + `POWER L: ${L1.toFixed(0)} /, POWER R: ${L2.toFixed(0)}`;
 			selectedPoint.innerText = sTEXT;

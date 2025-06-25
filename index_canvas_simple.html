@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vectored Thrust</title>
+  <style>
+    #mycanvas {
+      border: 2px solid black;
+    }
+  </style>
+
+</head>
+<body>
+ 
+    
+   
+<table>	 	 <tr>
+		<td style="border: 1px solid black; text-align: centre" colspan="4">
+		
+           <canvas id="mycanvas" width="500" height="500"> </canvas>
+		</td>
+	</tr>	
+	 <tr>
+		<td style="border: 1px solid black; text-align: centre" colspan="2">
+		<h3>Vectored Thrust</h3>  
+		</td>
+		<td style="border: 1px solid black; text-align: centre" colspan="2">
+		<button id="calibrate" onclick="calibrateClicked()">CALIBRATE</button>
+		</td>
+	</tr>	
+
+	 <tr>
+		<td style="border: 1px solid black; text-align: centre" colspan="2">
+		<p id="selected-point">SELECTED POINT</p>           
+		</td>
+		<td style="border: 1px solid black" colspan="1">
+		<p id="cal_x">0</p>    		  
+		</td>
+		<td style="border: 1px solid black" colspan="1">
+		<p id="cal_y">0</p>    
+		</td>
+		
+	</tr>	
+	<tr>
+		<td style="border: 1px solid black"> Lduty</td>
+		<td style="border: 1px solid black"> Lstatus</td>
+		<td style="border: 1px solid black">  Rduty</td>
+		<td style="border: 1px solid black">  Rstatus</td>
+		
+	</tr> 
+		<tr>
+		<td style="border: 1px solid black" id="Lduty">0</td>
+		<td style="border: 1px solid black"  id="Lstatus">0</td>
+		<td style="border: 1px solid black"  id="Rduty">0</td>
+		<td style="border: 1px solid black"  id="Rstatus">0</td>
+		
+	</tr> 
+	<tr>
+		<td style="border: 1px solid black" id="pointx" colspan="2">0</td>
+		<td style="border: 1px solid black"  id="pointy" colspan="2">0</td>
+
+	</tr> 
+	<tr>
+		<td style="border: 1px solid black; text-align: centre" colspan="4">
+		<h3 id="jasonstring" >J ASON STRING </h3> 
+		</td>
+	</tr>	
+</table>	
+
+	 <p id="DEBUG">debug</p>	
+	
+  <script>
+
+    let mycanvas = document.getElementById('mycanvas');
+    let ctx = mycanvas.getContext('2d');
+
+	mycanvas.style.background = "lightblue";
+	
+    let selectedPoint = document.getElementById('selected-point');
+
+    // =============================Handle mouse click event
+    mycanvas.addEventListener('mousedown', 
+    function(event) 
+        {
+          let rect = mycanvas.getBoundingClientRect();
+			
+			Xmax = rect.width; 
+			Ymax = rect.height; 
+
+          let x =  + event.clientX-Number(cal_x.innerText) ; 
+		  // adjust x to be relative to the origin
+          let y = + event.clientY -Number(cal_y.innerText)  ; 
+		  // adjust y to be relative to the origin
+		   
+		 // alert( y)			
+			vector = [x, y]; // Original vector
+			
+			x_old=Number(pointx.innerText);
+			y_old=Number(pointy.innerText );
+			
+			
+			drawLine(0,0,x_old,y_old,4,"lightblue")	;
+			plotPoint(x_old,y_old,5,"grey");			
+				
+			plotPoint(x,y,4,"red");
+			drawLine(0,0,x,y,2,"orange");
+
+			drawLine(0,0,500,0,50,"black");			
+			drawLine(0,0,0,500,50,"black");
+			
+			drawLine(0,0,x,0,20,"green");
+			drawLine(0,0,0,y,20,"green");
+			// Prepare JASON
+			Lduty.innerText = (x/500*100).toFixed(0);
+			Rduty.innerText = (y/500*100).toFixed(0);
+			Lstatus.innerText = 1;
+			Rstatus.innerText = 1;
+			
+			// Display the selected point value
+			sTEXT=`X: ${x.toFixed(0)} , Y: ${y.toFixed(0)} `;
+			selectedPoint.innerText = sTEXT;
+			
+			sTEXT='';
+			pointx.innerText = x.toFixed(0);
+			pointy.innerText = y.toFixed(0);
+			DEBUG.innerText = sTEXT;
+			
+			sendRequestFull();
+        }
+    );
+	//================================================================
+		function plotPoint(x, y, radius = 2,color) 
+		{
+		ctx.beginPath(); // Start a new path
+		ctx.arc(x, y, radius, 0, Math.PI * 2); // Create a circle
+		ctx.fillStyle = color; // Set the fill color
+		ctx.fill(); // Fill the circle
+		}
+
+		function drawLine(x1, y1, x2, y2, thickness, color) 
+			{
+            ctx.lineWidth = thickness; // Set the line thickness
+            ctx.strokeStyle = color; // Set the line color
+            ctx.beginPath(); // Start a new path
+            ctx.moveTo(x1, y1); // Move to the starting point
+            ctx.lineTo(x2, y2); // Draw a line to the ending point
+            ctx.stroke(); // Render the line		.stroke(); // Render the line
+			}
+		
+	// =============================Handle mouse click event
+	  function calibrateClicked() {
+				x_old=pointx.innerText;
+				y_old=pointy.innerText ;
+				cal_x.innerText =x_old;
+				cal_y.innerText =y_old;
+				}
+	//==============================================================
+	  function sendRequestFull() 
+        {
+            value1=document.getElementById("Lduty").innerHTML;
+            value2=document.getElementById("Lstatus").innerHTML;
+            value3=document.getElementById("Rduty").innerHTML;
+            value4=document.getElementById("Rstatus").innerHTML;
+            
+			
+			jasonstring="Lduty: " + value1 + " ; " + "Lstatus: " + value2 + " ; " + "Rduty: " + value3 + " ; " + "Rstatus: " + value4;
+			
+			document.getElementById("jasonstring").innerHTML= jasonstring;
+            
+            fetch('/api/pins', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                
+                body: JSON.stringify({ "MOTORL_PWM": value1, "MOTORL": value2, "MOTORR_PWM": value3, "MOTORR": value4  })
+            })
+            .then(response => response.text())
+            .then(data => console.log(data))
+            .catch(error => console.error('Error:', error));
+		
+        }
+  
+  </script>
+
+</body>
+</html>
