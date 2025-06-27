@@ -1,21 +1,14 @@
 (Exported by FreeCAD)
-(Post Processor: script_module)
-(Output Time:2025-06-26 17:05:07.011719)
-(begin preamble)
-%
-G17 G21 G40 G49 G80 G90
-M08
-G21
-(begin operation: Fixture)
-(machine: not set, mm/min)
-G54
-(finish operation: Fixture)
-(begin operation: TC: Default Tool)
-(machine: not set, mm/min)
-(TC: Default Tool)
-M05
-M09M6 T1
-(finish operation: TC: Default Tool)
+(Post Processor: KineticNCBeamicon2_post)
+(======CODE MANDATORY============)
+M3 S0  (M03 – Spindle on in a clockwise)
+(================================)
+S0 		(--LaserOff 000% OFF)
+G0 F1000 X0.000000 Y0.000000
+S1000	(---LaserOn 100% ON)
+S0 		(---LaserOff 000% OFF)
+(=BEGIN Engrave=========================)
+(==================================================================)
 (begin operation: Profile)
 (machine: not set, mm/min)
 (Profile)
@@ -46,14 +39,14 @@ G1 X216.690 Y170.279 Z0.000
 G3 X215.690 Y169.279 Z0.000 I0.000 J-1.000
 G1 X215.690 Y144.779 Z0.000
 G1 X199.690 Y144.779 Z0.000
-G3 X199.008 Y144.510 Z0.000 I-0.000 J-1.000
+G3 X199.008 Y144.510 Z0.000 I0.000 J-1.000
 G3 X198.690 Y143.779 Z0.000 I0.683 J-0.731
 G1 X189.690 Y143.779 Z0.000
 G3 X188.690 Y142.779 Z0.000 I0.000 J-1.000
 G1 X188.690 Y139.779 Z0.000
 G1 X160.690 Y139.779 Z0.000
 G1 X160.690 Y142.779 Z0.000
-G3 X159.690 Y143.779 Z0.000 I-1.000 J-0.000
+G3 X159.690 Y143.779 Z0.000 I-1.000 J0.000
 G1 X152.690 Y143.779 Z0.000
 G1 X152.690 Y164.258 Z0.000
 G2 X152.994 Y166.596 Z0.000 I9.002 J0.019
@@ -76,7 +69,7 @@ G3 X186.516 Y97.958 Z0.000 I0.000 J-1.000
 G1 X186.516 Y94.958 Z0.000
 G1 X158.516 Y94.958 Z0.000
 G1 X158.516 Y97.958 Z0.000
-G3 X157.516 Y98.958 Z0.000 I-1.000 J-0.000
+G3 X157.516 Y98.958 Z0.000 I-1.000 J0.000
 G1 X150.516 Y98.958 Z0.000
 G1 X150.516 Y119.437 Z0.000
 G2 X158.284 Y128.373 Z0.000 I9.002 J0.019
@@ -93,14 +86,14 @@ G1 X214.836 Y80.989 Z0.000
 G3 X213.836 Y79.989 Z0.000 I0.000 J-1.000
 G1 X213.836 Y55.489 Z0.000
 G1 X197.836 Y55.489 Z0.000
-G3 X197.153 Y55.220 Z0.000 I-0.000 J-1.000
+G3 X197.153 Y55.220 Z0.000 I0.000 J-1.000
 G3 X196.836 Y54.489 Z0.000 I0.683 J-0.731
 G1 X187.836 Y54.489 Z0.000
 G3 X186.836 Y53.489 Z0.000 I0.000 J-1.000
 G1 X186.836 Y50.489 Z0.000
 G1 X158.836 Y50.489 Z0.000
 G1 X158.836 Y53.489 Z0.000
-G3 X157.836 Y54.489 Z0.000 I-1.000 J-0.000
+G3 X157.836 Y54.489 Z0.000 I-1.000 J0.000
 G1 X150.836 Y54.489 Z0.000
 G1 X150.836 Y74.967 Z0.000
 G2 X159.576 Y83.985 Z0.000 I9.002 J0.019
@@ -122,7 +115,7 @@ G3 X184.277 Y12.859 Z0.000 I0.000 J-1.000
 G1 X184.277 Y9.859 Z0.000
 G1 X156.277 Y9.859 Z0.000
 G1 X156.277 Y12.859 Z0.000
-G3 X155.277 Y13.859 Z0.000 I-1.000 J-0.000
+G3 X155.277 Y13.859 Z0.000 I-1.000 J0.000
 G1 X148.277 Y13.859 Z0.000
 G1 X148.277 Y34.337 Z0.000
 G2 X157.298 Y43.359 Z0.000 I9.002 J0.019
@@ -130,6 +123,7 @@ G1 X159.576 Y43.359 Z0.000
 G0 Z13.992
 G0 Z13.992
 (finish operation: Profile)
+(==================================================================)
 (begin operation: Engrave)
 (machine: not set, mm/min)
 (Engrave)
@@ -215,6 +209,7 @@ G1 X73.000 Y19.000 Z2.992
 G1 X73.000 Y23.000 Z2.992
 G0 Z13.992
 (finish operation: Engrave)
+(==================================================================)
 (begin operation: Engrave001)
 (machine: not set, mm/min)
 (Engrave001)
@@ -230,6 +225,7 @@ G1 X212.690 Y148.495 Z2.992
 G1 X212.690 Y170.279 Z2.992
 G0 Z13.992
 (finish operation: Engrave001)
+(==================================================================)
 (begin operation: Engrave002)
 (machine: not set, mm/min)
 (Engrave002)
@@ -245,6 +241,7 @@ G1 X210.516 Y103.674 Z2.992
 G1 X210.516 Y125.458 Z2.992
 G0 Z13.992
 (finish operation: Engrave002)
+(==================================================================)
 (begin operation: Engrave003)
 (machine: not set, mm/min)
 (Engrave003)
@@ -260,6 +257,7 @@ G3 X153.836 Y74.989 Z2.992 I0.067 J-6.067
 G1 X153.836 Y59.205 Z2.992
 G0 Z13.992
 (finish operation: Engrave003)
+(==================================================================)
 (begin operation: Engrave004)
 (machine: not set, mm/min)
 (Engrave004)
@@ -275,6 +273,7 @@ G3 X151.277 Y34.359 Z2.992 I0.067 J-6.067
 G1 X151.277 Y18.575 Z2.992
 G0 Z13.992
 (finish operation: Engrave004)
+(==================================================================)
 (begin operation: Engrave005)
 (machine: not set, mm/min)
 (Engrave005)
@@ -298,7 +297,10 @@ G1 X31.195 Y54.631 Z2.992
 G3 X31.195 Y54.631 Z2.992 I-2.500 J0.000
 G0 Z13.992
 (finish operation: Engrave005)
-(begin postamble)
-M05 M09
-G17 G90 G80 G40
-M30
+
+(=END Engrave===========================)
+(======END============)
+(G00 – Rapid Positioning------------Laser OFF)
+S0 (---Laser 00% OFF)
+G0 Z10.000000
+(======END============)
