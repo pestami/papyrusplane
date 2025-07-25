@@ -27,6 +27,8 @@
 		</td>
 		<td style="border: 1px solid black; text-align: centre" colspan="2">
 		<button id="calibrate" onclick="calibrateClicked()">CALIBRATE</button>
+        <BR>
+        Click on Green POINT at coo-ordinates 50,50 then press clibrate.
 		</td>
 	</tr>	
 
@@ -148,6 +150,8 @@
 			pointx.innerText = x.toFixed(0);
 			pointy.innerText = y.toFixed(0);
 			DEBUG.innerText = sTEXT;
+
+            plotPoint(50,50,4,"green");
 			
 			sendRequestFull();
         }
@@ -175,8 +179,8 @@
 	  function calibrateClicked() {
 				x_old=pointx.innerText;
 				y_old=pointy.innerText ;
-				cal_x.innerText =x_old;
-				cal_y.innerText =y_old;
+				cal_x.innerText =x_old -50;
+				cal_y.innerText =y_old -50;
 				}
 	//==============================================================
 	  function sendRequestFull() 
