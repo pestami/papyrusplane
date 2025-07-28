@@ -102,7 +102,7 @@ CANVAS  COCKPIT
 <table>	 	 <tr>
 		<td style="border: 1px solid black; text-align: centre" colspan="4">
 		
-           <canvas id="mycanvas" width="600" height="600"> </canvas>
+           <canvas id="mycanvas" width="400" height="400"> </canvas>
 		</td>
 	</tr>	
 	 <tr>
@@ -128,7 +128,20 @@ CANVAS  COCKPIT
 		</td>
 		
 	</tr>	
-	<tr>
+
+</table>	
+
+	 <p id="DEBUG">debug</p>		
+<!--------------------------------------------------------------------------------------->
+</div> 	
+<!--------------------------------------------------------------------------------------->
+<table>	 	
+	 <tr >
+		<td style="border: 1px solid black; text-align: centre" colspan="4">
+		<h3>Vectored Thrust</h3>  
+		</td>		
+	</tr>	
+<tr>
 		<td style="border: 1px solid black"> Lduty</td>
 		<td style="border: 1px solid black"> Lstatus</td>
 		<td style="border: 1px solid black"> Rduty</td>
@@ -149,14 +162,9 @@ CANVAS  COCKPIT
 	</tr> 
 	<tr>
 		<td style="border: 1px solid black; text-align: centre" colspan="4">
-		<h3 id="jasonstring" >J ASON STRING </h3> 
+		<h3 id="jasonstring" >JASON STRING </h3> 
 		</td>
 	</tr>	
-</table>	
-
-	 <p id="DEBUG">debug</p>		
-<!--------------------------------------------------------------------------------------->
-</div> 	
 
 <!--------------------------------------------------------------------------------------->
 <!----===============USING CANVAS================================================-------->
@@ -296,7 +304,8 @@ CANVAS  COCKPIT
             .catch(error => console.error('Error:', error));
 		
         }
-  
+
+ 
   </script>
 <!----=============END==USING CANVAS=============================================-------->
 
@@ -306,52 +315,48 @@ CANVAS  COCKPIT
     console.log("Slider 1 changed to: " + value);
       document.getElementById("slider1-value").innerHTML = value;
     // Add your code here to handle the slider change event
+    Lduty.innerText=value
+    sendRequestFull();
+    
   }
 
   function slider2Changed(value) {
     console.log("Slider 2 changed to: " + value);      
     document.getElementById("slider2-value").innerHTML = value;
     // Add your code here to handle the slider change event
+    Rduty.innerText=value
+    sendRequestFull();
   }
 
   function button1Clicked() {
     console.log("Button 1 clicked: Enable WLAN");
     // Add your code here to handle the button click event
-      sendRequest("LED",1);
+      //sendRequest("LED",1);
+    Lstatus.innerText=1;
+    sendRequestFull();
   }
 
   function button2Clicked() {
     console.log("Button 2 clicked: Disable WLAN");
     // Add your code here to handle the button click event
+    Lstatus.innerText=0;
+    sendRequestFull();
   }
 
   function button3Clicked() {
     console.log("Button 3 clicked: Restart WLAN");
     // Add your code here to handle the button click event
+    Rstatus.innerText=1;
+    sendRequestFull();
   }
 
   function button4Clicked() {
     console.log("Button 4 clicked: Reset WLAN");
     // Add your code here to handle the button click event
+    Rstatus.innerText=0;
+    sendRequestFull();
   }
-    //---------------------------------------------------------
-        // Function to send the POST request
-        // { "LED": status , "PWM": "hello"}
-        function sendRequest(KEY, value) 
-        {
-            fetch('/api/pins', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                //body: JSON.stringify({ "LED": status,"LED2": status })
-                body: JSON.stringify({ KEY: value })
-            })
-            .then(response => response.text())
-            .then(data => console.log(data))
-            .catch(error => console.error('Error:', error));
-        }
-//---------------------------------------------------------
+
 </script>
 <!----===========END====USING SLIDERS================================================-------->
 <!--------------------------------------------------------------------------------------->
