@@ -1,19 +1,103 @@
 <!DOCTYPE html>
 <html>
+<!---------------------------------------------------------------------------------------> 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Vectored Thrust</title>
+  <title>Thrust Pannels</title>
+   <style>
+        /* Style for the button */
+        button {
+            padding: 5px 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+  </style>
   <style>
     #mycanvas {
       border: 2px solid black;
     }
   </style>
 
+   <style>
+        .region {
+            padding: 10px;
+            border: 1px solid #ccc;
+            margin-bottom: 10px;
+        }
+        #region1, #region2 {
+            display: none;
+        }
+    </style>
 </head>
+<!---------------------------------------------------------------------------------------> 
+
+<script>
+    function toggleVisibility() {
+        var selectedValue = document.querySelector('input[name="regionToggle"]:checked').value;
+        document.getElementById('region1').style.display = (selectedValue === 'region1') ? 'block' : 'none';
+        document.getElementById('region2').style.display = (selectedValue === 'region2') ? 'block' : 'none';
+    }
+</script>
+<!---------------------------------------------------------------------------------------> 
+
+
 <body>
- 
-    
+	<h1>WLAN - CONTROLLER Cockpit</h1>
+
+<input type="radio" id="showRegion1" name="regionToggle" value="region1" onchange="toggleVisibility()">
+<label for="showRegion1">Show Region 1</label>
+
+<input type="radio" id="showRegion2" name="regionToggle" value="region2" onchange="toggleVisibility()">
+<label for="showRegion2">Show Region 2</label>
+<!---
+<div id="region1" class="region">This is Region 1</div>
+<div id="region2" class="region">This is Region 2</div>
+-------> 
+
+<!--------------------------------------------------------------------------------
+=================================================================================
+SLIDERS  COCKPIT
+=================================================================================
+--------------------------------------------------------------------------------> 
+<div id="region1" class="region">This is Region 2
+
+<table style="border: 1px solid black; text-align: center">
+    <tr>
+        <td colspan="4"> <h1>WLAN - CONTROLLER</h1> </td>
+    </tr> 
+  <tr>
+    <td>
+      <input type="range" id="slider1" min="0" max="100" value="50" style="transform: rotate(-90deg); height: 200px; width: 200px;" onchange="slider1Changed(this.value)">
+        <span id="slider1-value">50</span>
+      </td>
+    <td>
+      <button id="button1" onclick="button1Clicked()">Engine Start</button><br>
+      <button id="button2" onclick="button2Clicked()">Engine Stoop</button><br>
+
+    </td>
+     <td>
+
+      <button id="button3" onclick="button3Clicked()">Engine Start</button><br>
+      <button id="button4" onclick="button4Clicked()">Engine Stop</button>
+    </td>
+    <td>
+      <input type="range" id="slider2" min="0" max="100" value="50" style="transform: rotate(-90deg); height: 200px; width: 200px;" onchange="slider2Changed(this.value)">
+    <span id="slider2-value">50</span>
+      </td>
+  </tr>
+</table>
+
+
+
+</div>
+<!--------------------------------------------------------------------------------
+=================================================================================
+CANVAS  COCKPIT
+=================================================================================
+--------------------------------------------------------------------------------> 
+<div id="region2" class="region">  
+   
    
 <table>	 	 <tr>
 		<td style="border: 1px solid black; text-align: centre" colspan="4">
@@ -27,6 +111,8 @@
 		</td>
 		<td style="border: 1px solid black; text-align: centre" colspan="2">
 		<button id="calibrate" onclick="calibrateClicked()">CALIBRATE</button>
+        <BR>
+        Click on Green POINT at coo-ordinates 50,50 then press clibrate.
 		</td>
 	</tr>	
 
@@ -68,9 +154,13 @@
 	</tr>	
 </table>	
 
-	 <p id="DEBUG">debug</p>	
-	
-  <script>
+	 <p id="DEBUG">debug</p>		
+<!--------------------------------------------------------------------------------------->
+</div> 	
+
+<!--------------------------------------------------------------------------------------->
+<!----===============USING CANVAS================================================-------->
+ <script>
 
     let mycanvas = document.getElementById('mycanvas');
     let ctx = mycanvas.getContext('2d');
@@ -148,6 +238,8 @@
 			pointx.innerText = x.toFixed(0);
 			pointy.innerText = y.toFixed(0);
 			DEBUG.innerText = sTEXT;
+
+            plotPoint(50,50,4,"green");
 			
 			sendRequestFull();
         }
@@ -175,8 +267,8 @@
 	  function calibrateClicked() {
 				x_old=pointx.innerText;
 				y_old=pointy.innerText ;
-				cal_x.innerText =x_old;
-				cal_y.innerText =y_old;
+				cal_x.innerText =x_old -50;
+				cal_y.innerText =y_old -50;
 				}
 	//==============================================================
 	  function sendRequestFull() 
@@ -206,6 +298,63 @@
         }
   
   </script>
+<!----=============END==USING CANVAS=============================================-------->
 
+<!----===============USING SLIDERS================================================-------->
+<script>
+  function slider1Changed(value) {
+    console.log("Slider 1 changed to: " + value);
+      document.getElementById("slider1-value").innerHTML = value;
+    // Add your code here to handle the slider change event
+  }
+
+  function slider2Changed(value) {
+    console.log("Slider 2 changed to: " + value);      
+    document.getElementById("slider2-value").innerHTML = value;
+    // Add your code here to handle the slider change event
+  }
+
+  function button1Clicked() {
+    console.log("Button 1 clicked: Enable WLAN");
+    // Add your code here to handle the button click event
+      sendRequest("LED",1);
+  }
+
+  function button2Clicked() {
+    console.log("Button 2 clicked: Disable WLAN");
+    // Add your code here to handle the button click event
+  }
+
+  function button3Clicked() {
+    console.log("Button 3 clicked: Restart WLAN");
+    // Add your code here to handle the button click event
+  }
+
+  function button4Clicked() {
+    console.log("Button 4 clicked: Reset WLAN");
+    // Add your code here to handle the button click event
+  }
+    //---------------------------------------------------------
+        // Function to send the POST request
+        // { "LED": status , "PWM": "hello"}
+        function sendRequest(KEY, value) 
+        {
+            fetch('/api/pins', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                //body: JSON.stringify({ "LED": status,"LED2": status })
+                body: JSON.stringify({ KEY: value })
+            })
+            .then(response => response.text())
+            .then(data => console.log(data))
+            .catch(error => console.error('Error:', error));
+        }
+//---------------------------------------------------------
+</script>
+<!----===========END====USING SLIDERS================================================-------->
+<!--------------------------------------------------------------------------------------->
+<!--------------------------------------------------------------------------------------->
 </body>
 </html>

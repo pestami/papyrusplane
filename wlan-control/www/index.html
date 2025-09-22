@@ -12,10 +12,116 @@
             font-size: 16px;
             cursor: pointer;
         }
+<<<<<<< HEAD
   </style>
  
 </head>
 <!---------------------------------------------------------------------------------------> 
+=======
+  </style>
+  <style>
+    #mycanvas {
+      border: 2px solid black;
+    }
+  </style>
+
+   <style>
+        .region {
+            padding: 10px;
+            border: 1px solid #ccc;
+            margin-bottom: 10px;
+        }
+        #region1, #region2 {
+            display: none;
+        }
+    </style>
+</head>
+<!---------------------------------------------------------------------------------------> 
+
+<script>
+    function toggleVisibility() {
+        var selectedValue = document.querySelector('input[name="regionToggle"]:checked').value;
+        document.getElementById('region1').style.display = (selectedValue === 'region1') ? 'block' : 'none';
+        document.getElementById('region2').style.display = (selectedValue === 'region2') ? 'block' : 'none';
+    }
+</script>
+<!---------------------------------------------------------------------------------------> 
+
+
+<body>
+	<h1>WLAN - CONTROLLER Cockpit</h1>
+
+<input type="radio" id="showRegion1" name="regionToggle" value="region1" onchange="toggleVisibility()">
+<label for="showRegion1">Show Region 1</label>
+
+<input type="radio" id="showRegion2" name="regionToggle" value="region2" onchange="toggleVisibility()">
+<label for="showRegion2">Show Region 2</label>
+<!---
+<div id="region1" class="region">This is Region 1</div>
+<div id="region2" class="region">This is Region 2</div>
+-------> 
+
+<!--------------------------------------------------------------------------------
+=================================================================================
+SLIDERS  COCKPIT
+=================================================================================
+--------------------------------------------------------------------------------> 
+<div id="region1" class="region">This is Region 2
+
+<table style="border: 1px solid black; text-align: center">
+    <tr>
+        <td colspan="4"> <h1>WLAN - CONTROLLER</h1> </td>
+    </tr> 
+  <tr>
+    <td>
+      <input type="range" id="slider1" min="0" max="100" value="50" style="transform: rotate(-90deg); height: 200px; width: 200px;" onchange="slider1Changed(this.value)">
+        <span id="slider1-value">50</span>
+      </td>
+    <td>
+      <button id="button1" onclick="button1Clicked()">Engine Start</button><br>
+      <button id="button2" onclick="button2Clicked()">Engine Stoop</button><br>
+
+    </td>
+     <td>
+
+      <button id="button3" onclick="button3Clicked()">Engine Start</button><br>
+      <button id="button4" onclick="button4Clicked()">Engine Stop</button>
+    </td>
+    <td>
+      <input type="range" id="slider2" min="0" max="100" value="50" style="transform: rotate(-90deg); height: 200px; width: 200px;" onchange="slider2Changed(this.value)">
+    <span id="slider2-value">50</span>
+      </td>
+  </tr>
+</table>
+
+
+
+</div>
+<!--------------------------------------------------------------------------------
+=================================================================================
+CANVAS  COCKPIT
+=================================================================================
+--------------------------------------------------------------------------------> 
+<div id="region2" class="region">  
+   
+   
+<table>	 	 <tr>
+		<td style="border: 1px solid black; text-align: centre" colspan="4">
+		
+           <canvas id="mycanvas" width="400" height="400"> </canvas>
+		</td>
+	</tr>	
+	 <tr>
+		<td style="border: 1px solid black; text-align: centre" colspan="2">
+		<h3>Vectored Thrust</h3>  
+		</td>
+		<td style="border: 1px solid black; text-align: centre" colspan="2">
+		<button id="calibrate" onclick="calibrateClicked()">CALIBRATE</button>
+        <BR>
+        Click on Green POINT at coo-ordinates 50,50 then press clibrate.
+		</td>
+	</tr>	
+>>>>>>> origin/master
 
 
 <!---------------------------------------------------------------------------------------> 
@@ -86,10 +192,30 @@ SLIDERS  COCKPIT
 		<h3>Vectored Thrust</h3>  
 		</td>		
 	</tr>	
+<<<<<<< HEAD
 <tr>
 		<td style="border: 1px solid black"> Lduty %</td>
 		<td style="border: 1px solid black"> Lstatus </td>
 		<td style="border: 1px solid black"> Rduty %</td>
+=======
+
+</table>	
+
+	 <p id="DEBUG">debug</p>		
+<!--------------------------------------------------------------------------------------->
+</div> 	
+<!--------------------------------------------------------------------------------------->
+<table>	 	
+	 <tr >
+		<td style="border: 1px solid black; text-align: centre" colspan="4">
+		<h3>Vectored Thrust</h3>  
+		</td>		
+	</tr>	
+<tr>
+		<td style="border: 1px solid black"> Lduty</td>
+		<td style="border: 1px solid black"> Lstatus</td>
+		<td style="border: 1px solid black"> Rduty</td>
+>>>>>>> origin/master
 		<td style="border: 1px solid black"> Rstatus</td>
 		
 	</tr> 
@@ -117,7 +243,121 @@ SLIDERS  COCKPIT
 	</tr>	
 
 <!--------------------------------------------------------------------------------------->
+<<<<<<< HEAD
 <script>
+=======
+<!----===============USING CANVAS================================================-------->
+ <script>
+
+    let mycanvas = document.getElementById('mycanvas');
+    let ctx = mycanvas.getContext('2d');
+	mycanvas.style.background = "lightblue";
+    drawLine(500,0,500,600,5,"black");			
+	drawLine(0,500,600,500,5,"black");
+	
+    let selectedPoint = document.getElementById('selected-point');
+
+    // =============================Handle mouse click event
+    mycanvas.addEventListener('mousedown', 
+    function(event) 
+        {
+          let rect = mycanvas.getBoundingClientRect();
+			
+			Xmax = rect.width; 
+			Ymax = rect.height; 
+
+          let x =  + event.clientX-Number(cal_x.innerText) ; 
+		  // adjust x to be relative to the origin
+          let y = + event.clientY -Number(cal_y.innerText)  ; 
+		  // adjust y to be relative to the origin
+		   
+		 // alert( y)			
+			vector = [x, y]; // Original vector
+			
+			x_old=Number(pointx.innerText);
+			y_old=Number(pointy.innerText );
+			
+			
+			drawLine(0,0,x_old,y_old,4,"lightblue")	;
+			plotPoint(x_old,y_old,5,"grey");			
+				
+			plotPoint(x,y,4,"red");
+			drawLine(0,0,x,y,2,"orange");
+
+			drawLine(0,0,500,0,50,"black");			
+			drawLine(0,0,0,500,50,"black");
+			
+            if (x<500 && y<500)
+            {
+			drawLine(0,0,x,0,20,"green");
+			drawLine(0,0,0,y,20,"green");
+            }
+
+             if (x>500 )
+            {Lstatus.innerText=0;
+            }
+            else
+            {
+                Lstatus.innerText=1;
+            }
+            if (y>500 )
+            {
+			   Rstatus.innerText=0;
+            }
+            else
+            {   
+                Rstatus.innerText=1;
+            }
+
+			// Prepare JASON
+
+			Lduty.innerText = (x/500*100).toFixed(0);
+
+			Rduty.innerText = (y/500*100).toFixed(0);
+
+
+			
+			// Display the selected point value
+			sTEXT=`X: ${x.toFixed(0)} , Y: ${y.toFixed(0)} `;
+			selectedPoint.innerText = sTEXT;
+			
+			sTEXT='';
+			pointx.innerText = x.toFixed(0);
+			pointy.innerText = y.toFixed(0);
+			DEBUG.innerText = sTEXT;
+
+            plotPoint(50,50,4,"green");
+			
+			sendRequestFull();
+        }
+    );
+	//================================================================
+		function plotPoint(x, y, radius = 2,color) 
+		{
+		ctx.beginPath(); // Start a new path
+		ctx.arc(x, y, radius, 0, Math.PI * 2); // Create a circle
+		ctx.fillStyle = color; // Set the fill color
+		ctx.fill(); // Fill the circle
+		}
+
+		function drawLine(x1, y1, x2, y2, thickness, color) 
+			{
+            ctx.lineWidth = thickness; // Set the line thickness
+            ctx.strokeStyle = color; // Set the line color
+            ctx.beginPath(); // Start a new path
+            ctx.moveTo(x1, y1); // Move to the starting point
+            ctx.lineTo(x2, y2); // Draw a line to the ending point
+            ctx.stroke(); // Render the line		.stroke(); // Render the line
+			}
+		
+	// =============================Handle mouse click event
+	  function calibrateClicked() {
+				x_old=pointx.innerText;
+				y_old=pointy.innerText ;
+				cal_x.innerText =x_old -50;
+				cal_y.innerText =y_old -50;
+				}
+>>>>>>> origin/master
 	//==============================================================
 	  function sendRequestFull() 
         {
@@ -145,10 +385,17 @@ SLIDERS  COCKPIT
             .catch(error => console.error('Error:', error));
 		
         }
+<<<<<<< HEAD
 
  
   </script>
 
+=======
+
+ 
+  </script>
+<!----=============END==USING CANVAS=============================================-------->
+>>>>>>> origin/master
 
 <!----===============USING SLIDERS================================================-------->
 <script>
@@ -169,6 +416,7 @@ SLIDERS  COCKPIT
     sendRequestFull();
   }
 
+<<<<<<< HEAD
   function sliderservo1_Changed(value) {
     console.log("Slider servo changed to: " + value);      
     document.getElementById("lbl_servo1_angle").innerHTML = value;
@@ -177,6 +425,8 @@ SLIDERS  COCKPIT
     sendRequestFull();
   }
 
+=======
+>>>>>>> origin/master
   function button1Clicked() {
     console.log("Button 1 clicked: Enable WLAN");
     // Add your code here to handle the button click event
