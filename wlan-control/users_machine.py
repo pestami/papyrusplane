@@ -1,9 +1,14 @@
 # users_machine.py
 
+from DIYables_MicroPython_Servo import Servo
+
+
 from machine import Pin, PWM
 
 motorL = PWM(Pin(22,Pin.OUT), freq = 5000, duty = 0)
 motorR = PWM(Pin(23,Pin.OUT), freq = 5000, duty = 0)
+# Create a Servo object
+servo = Servo(17) # The ESP32 pin GPIO26 connected to the servo motor
 
 class my_machine: 
 
@@ -16,7 +21,8 @@ class my_machine:
         print("\n do_commands()-----my_machine command-----")
         print(machine_cmd)
         for key, value in machine_cmd.items():
-          print(f"{key}: {value}")        
+          print(f"{key}: {value}")
+        print("\n do_commands()----------------------------")  
    # | MOTORL:1 | MOTORL:0 | MOTORL_PWM:73
 
       #------------GET operational values for motors
@@ -27,7 +33,7 @@ class my_machine:
         nMotorR_PWM= int(machine_cmd.get("MOTORR_PWM"))       
         
       #----------------------Calculate Duty
-        print("BEGIN ----------------Calculate Motor Duty Cycle-----16H10")  
+        print("BEGIN ----------------Calculate Motor Duty Cycle-----18:10")  
       
         nDutyL=int(1021/100*(nMotorL_PWM)) # max duty is 1023 LED is LOW
         if nMotorL==0:
@@ -43,7 +49,13 @@ class my_machine:
         print(f"Duty Left PWM: {nDutyR} Motor ON/OFF: {nMotorR}")
         motorR.duty(nDutyR)
 
-        print("END----------------------Calculate Motor Duty Cycle-----")       
+        print("END----------------------Calculate Motor Duty Cycle-----")
+        
+        print("ROTATE SERVO--------------------------------------\n")
+        print(int(machine_cmd.get("SERVOR")))
+        servo.move_to_angle(int(machine_cmd.get("SERVOR")))  # Set servo position to calculated angle
+ 
+
         # ----------------------
 
 def main():
