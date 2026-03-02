@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gamepad API Example</title>
+    <style>
+        #gamepad-info {
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Gamepad API Example 02</h1>
+<div id="gamepad-info"></div>
+
+<script>
+    let gamepadInfoDiv = document.getElementById('gamepad-info');
+    let gamepadIndex = null;
+
+    // Check for gamepad support
+    if (navigator.getGamepads) {
+        // Get gamepad state
+        function getGamepadState() {
+            let gamepads = navigator.getGamepads();
+            if (gamepads.length > 0 && gamepads[0] !== null) {
+                if (gamepadIndex === null) {
+                    gamepadIndex = gamepads[0].index;
+                }
+                displayGamepadInfo(gamepads[0]);
+            } else {
+                gamepadInfoDiv.innerText = 'No gamepad connected.';
+                gamepadIndex = null;
+            }
+        }
+
+        // Display gamepad info
+        function displayGamepadInfo(gamepad) {
+            let info = `Gamepad ${gamepad.index}: ${gamepad.id}\n`;
+            info += `Buttons:\n`;
+            for (let i = 0; i < gamepad.buttons.length; i++) {
+                info += `  Button ${i}: ${gamepad.buttons[i].pressed} (Value: ${gamepad.buttons[i].value})\n`;
+            }
+            info += `Axes:\n`;
+            for (let i = 0; i < gamepad.axes.length; i++) {
+                info += `  Axis ${i}: ${gamepad.axes[i]}\n`;
+            }
+            gamepadInfoDiv.innerText = info;
+        }
+
+        // Get gamepad state on page load and on interval
+        getGamepadState();
+        setInterval(getGamepadState, 50);
+    } else {
+        gamepadInfoDiv.innerText = 'Gamepad API not supported.';
+    }
+</script>
+
+</body>
+</html>
+

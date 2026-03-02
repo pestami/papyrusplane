@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <!---------------------------------------------------------------------------------------> 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Thrust Pannels</title>
    <style>
         /* Style for the button */
@@ -13,6 +14,15 @@
             cursor: pointer;
         }
   </style>
+
+
+
+    <title>Gamepad API Example</title>
+    <style>
+        #gamepad-info {
+            font-family: monospace;
+        }
+    </style>
  
 </head>
 <!---------------------------------------------------------------------------------------> 
@@ -23,7 +33,6 @@
 
 <body>
 	<h1>WLAN - CONTROLLER Cockpit</h1>
-
 
 
 <!--------------------------------------------------------------------------------
@@ -86,14 +95,14 @@ SLIDERS  COCKPIT
 		<h3>Vectored Thrust</h3>  
 		</td>		
 	</tr>	
-<tr>
+    <tr>
 		<td style="border: 1px solid black"> Lduty %</td>
 		<td style="border: 1px solid black"> Lstatus </td>
 		<td style="border: 1px solid black"> Rduty %</td>
 		<td style="border: 1px solid black"> Rstatus</td>
 		
 	</tr> 
-		<tr>
+	<tr>
 		<td style="border: 1px solid black" id="Lduty">0</td>
 		<td style="border: 1px solid black"  id="Lstatus">0</td>
 		<td style="border: 1px solid black"  id="Rduty">0</td>
@@ -115,7 +124,7 @@ SLIDERS  COCKPIT
 		<h3 id="jasonstring" >JASON STRING </h3> 
 		</td>
 	</tr>	
-
+</table>
 <!--------------------------------------------------------------------------------------->
 <script>
 	//==============================================================
@@ -209,6 +218,108 @@ SLIDERS  COCKPIT
 </script>
 <!----===========END====USING SLIDERS================================================-------->
 <!--------------------------------------------------------------------------------------->
+=================================================================
+<BR>
+<h1>Gamepad API Example 02</h1>
+<div id="gamepad-info"></div>
+<BR>
+=================================================================
+<div id="cockpit-info"></div>
+
+<script>
+function getGamepadState() 
+        {
+            let gamepads = navigator.getGamepads();
+
+            if (gamepads.length > 0 && gamepads[0] !== null) 
+                {
+                        if (gamepadIndex === null) 
+                        {
+                            gamepadIndex = gamepads[0].index;
+                        }
+                        displayGamepadInfo(gamepads[0]);
+                        displayCockpit();
+                } else 
+                {
+                    gamepadInfoDiv.innerText = 'No gamepad connected.';
+                    gamepadIndex = null;
+                }
+        }
+ function displayGamepadInfo(gamepad) 
+        {
+            let info = `Gamepad ${gamepad.index}: ${gamepad.id}\n`;
+            info += `Buttons:\n`;
+
+            for (let i = 0; i < gamepad.buttons.length; i++) 
+            {
+                info += `  Button ${i}: ${gamepad.buttons[i].pressed} (Value: ${gamepad.buttons[i].value})\n`;
+            }
+            info += `Axes:\n`;
+            for (let i = 0; i < gamepad.axes.length; i++) 
+            {
+                info += `  Axis ${i}: ${gamepad.axes[i]}\n`;
+            }
+            gamepadInfoDiv.innerText = info;
+
+  //          infotext=`  Button ${4}: ${gamepad.buttons[4].pressed} (Value: ${gamepad.buttons[4].value})\n`;
+
+   //         cockpitInfoDiv.innerText =':' + infotext;
+
+        }
+ function displayCockpit() 
+        {
+            if (navigator.getGamepads) 
+                {   
+                        let gamepads = navigator.getGamepads();
+                        let gamepad = gamepads[0];
+                    
+                    infotext='--------------------------------------------\n';
+                    infotext+=`  Button ${4}: ${gamepad.buttons[4].pressed} (Value: ${gamepad.buttons[4].value})\n`;
+                    infotext+=`  Button ${5}: ${gamepad.buttons[5].pressed} (Value: ${gamepad.buttons[5].value})\n`;
+                    infotext+=`  Button ${6}: ${gamepad.buttons[6].pressed} (Value: ${gamepad.buttons[6].value})\n`;
+                    infotext+=`  Button ${7}: ${gamepad.buttons[7].pressed} (Value: ${gamepad.buttons[7].value})\n`;
+
+                    if (gamepad.buttons[4].pressed) { button1Clicked();};
+                    if (gamepad.buttons[6].pressed) { button2Clicked();};
+
+                    if (gamepad.buttons[5].pressed) { button3Clicked();};
+                    if (gamepad.buttons[7].pressed) { button4Clicked();};
+
+
+                    cockpitInfoDiv.innerText = infotext;
+                } 
+                
+            else 
+                {
+                    cockpitInfoDiv.innerText = 'strange stuff';
+                }
+
+        }
+</script>
+<script>
+    let gamepadInfoDiv = document.getElementById('gamepad-info');
+
+    let cockpitInfoDiv = document.getElementById('cockpit-info');
+
+    let gamepadIndex = null;
+    // Check for gamepad support
+    if (navigator.getGamepads) 
+        {
+            // Get gamepad state on page load and on interval
+            getGamepadState();
+            setInterval(getGamepadState, 50);
+
+           
+ 
+        } 
+    else 
+        {
+            gamepadInfoDiv.innerText = 'Gamepad API not supported.';
+        }
+//===========================================================================================================
+
+            
+</script>
 <!--------------------------------------------------------------------------------------->
 </body>
 </html>
