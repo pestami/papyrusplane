@@ -1,0 +1,13 @@
+# -*- coding: utf-8 -*-
+
+# Macro Begin: /home/pi/Documents/papyrusplane/NC_CAR2/freecadnc.FCMacro +++++++++++++++++++++++++++++++++++++++++++++++++
+import FreeCAD
+import Command
+
+# Gui.runCommand('Std_DlgMacroRecord',0)
+# Gui.Selection.clearSelection()
+# Gui.Selection.addSelection('CAR_LASER_COMPONENTS','Operations')
+# Gui.Selection.clearSelection()
+# Gui.Selection.addSelection('CAR_LASER_COMPONENTS','Job')
+# Gui.runCommand('CAM_Post',0)
+# Macro End: /home/pi/Documents/papyrusplane/NC_CAR2/freecadnc.FCMacro +++++++++++++++++++++++++++++++++++++++++++++++++
