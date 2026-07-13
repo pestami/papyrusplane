@@ -1,8 +1,23 @@
 # arduino-lab-micropython-ide
 
  ---
+## IDE using Arduino
 
-<!---------------------------------------------------------------------------------------------
+<img src="png/ArduinoLabMicropython.png" width="400" height="200">
+
+
+## IDE using Thonny
+
+<img src="png/pythonESP32.png" width="400" height="200">
+
+<img src="png/thonyInterpreter.png" width="400" height="200">
+
+
+
+
+
+
+<!--
 
 # Headings
 # H1
@@ -48,4 +63,4 @@
 ```js
 console.log("hi");
 
------------------------------------------------------------------------------------------------------------------->
+-->
