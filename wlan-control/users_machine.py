@@ -5,8 +5,14 @@ from DIYables_MicroPython_Servo import Servo
 
 from machine import Pin, PWM
 
-motorL = PWM(Pin(22,Pin.OUT), freq = 5000, duty = 0)
-motorR = PWM(Pin(23,Pin.OUT), freq = 5000, duty = 0)
+motorL_forward = PWM(Pin(22,Pin.OUT), freq = 5000, duty = 0)
+motorR_forward = PWM(Pin(23,Pin.OUT), freq = 5000, duty = 0)
+
+motorL_reverse = PWM(Pin(19,Pin.OUT), freq = 5000, duty = 0)
+motorR_reverse = PWM(Pin(18,Pin.OUT), freq = 5000, duty = 0)
+
+
+
 # Create a Servo object
 servo = Servo(17) # The ESP32 pin GPIO26 connected to the servo motor
 
@@ -40,14 +46,14 @@ class my_machine:
           nDutyL=0
         print("INFO: (1023=LED_dim 0=LED_bright)")
         print(f"Duty Left PWM: {nDutyL} Motor ON/OFF: {nMotorL}")
-        motorL.duty(nDutyL)
+        motorL_forward.duty(nDutyL)
 
         nDutyR=int(1021/100*(nMotorR_PWM)) # max duty is 1023 LED is LOW
         if nMotorR==0:
           nDutyR=0
         print("INFO: (1023=LED_dim 0=LED_bright)")
         print(f"Duty Left PWM: {nDutyR} Motor ON/OFF: {nMotorR}")
-        motorR.duty(nDutyR)
+        motorR_forward.duty(nDutyR)
 
         print("END----------------------Calculate Motor Duty Cycle-----")
         

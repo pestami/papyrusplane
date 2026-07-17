@@ -23,6 +23,19 @@
             font-family: monospace;
         }
     </style>
+
+    <script>
+        const t = document.getElementById('myTable');
+        t.classList.add('table-red');
+
+        // later:
+        // t.classList.remove('table-red');
+    </script>
+
+<style>
+  .table-red { background: #ffe5e5; }
+  .table-red td, .table-red th { color: #7a0000; }
+</style>
  
 </head>
 <!---------------------------------------------------------------------------------------> 
@@ -32,7 +45,7 @@
 
 
 <body>
-	<h1>WLAN - CONTROLLER Cockpit</h1>
+	<h1>WLAN - CONTROLLER Cockpit +Joy 2026/07/14 001</h1>
 
 
 <!--------------------------------------------------------------------------------
@@ -42,7 +55,7 @@ SLIDERS  COCKPIT
 --------------------------------------------------------------------------------> 
 
 
-<table style="border: 1px solid black; text-align: center">
+<table id="myTable" style="border: 1px solid black; text-align: center">
     <tr>
         <td colspan="4"> <h1>WLAN - CONTROLLER</h1> </td>
     </tr> 
@@ -74,20 +87,20 @@ SLIDERS  COCKPIT
   </tr>
     <tr>
         <td colspan="4">
-              <input type="range" id="slider_server1" min="0" max="180" value="0" style="height: 20px; width: 200px;" onchange="sliderservo1_Changed(this.value)">
+              <input type="range" id="slider_server1" min="0" max="180" value="90" style="height: 20px; width: 200px;" onchange="sliderservo1_Changed(this.value)">
         
     </tr> 
   <tr>
     <tr>
         <td colspan="4">
               
-        <span id="lbl_servo1_angle">0</span>
+        <span id="lbl_servo1_angle">90</span>
     </tr> 
   <tr>
 </table>
 
-<!--------------------------------------------------------------------------------
-
+<!-------------------------------------------------------------------------------->
+<div id="cockpit-info"></div>
 <!--------------------------------------------------------------------------------------->
 <table>	 	
 	 <tr >
@@ -135,6 +148,33 @@ SLIDERS  COCKPIT
             value3=document.getElementById("Rduty").innerHTML;
             value4=document.getElementById("Rstatus").innerHTML;
             value5=document.getElementById("tbl_servo1_angle").innerHTML;
+            
+			
+			jasonstring="Lduty: " + value1 + " ; " + "Lstatus: " + value2 + " ; " + "Rduty: " + value3 + " ; " + "Rstatus: " + value4 + " ; " + "Servo1: " + value5;
+			
+			document.getElementById("jasonstring").innerHTML= jasonstring;
+            
+            fetch('/api/pins', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                
+                body: JSON.stringify({ "MOTORL_PWM": value1, "MOTORL": value2, "MOTORR_PWM": value3, "MOTORR": value4 , "SERVOR": value5  })
+            })
+            .then(response => response.text())
+            .then(data => console.log(data))
+            .catch(error => console.error('Error:', error));
+		
+        }
+
+    function sendRequestjason(Lduty,Lstatus,Rduty,valuRstatuse1,tbl_servo1_angle) 
+        {
+            value1=Lduty;
+            value2=Lstatus;
+            value3=Rduty;
+            value4=Rstatus;
+            value5=tbl_servo1_angle;
             
 			
 			jasonstring="Lduty: " + value1 + " ; " + "Lstatus: " + value2 + " ; " + "Rduty: " + value3 + " ; " + "Rstatus: " + value4 + " ; " + "Servo1: " + value5;
@@ -224,7 +264,7 @@ SLIDERS  COCKPIT
 <div id="gamepad-info"></div>
 <BR>
 =================================================================
-<div id="cockpit-info"></div>
+
 
 <script>
 function getGamepadState() 
@@ -265,6 +305,11 @@ function getGamepadState()
 
    //         cockpitInfoDiv.innerText =':' + infotext;
 
+                            const t = document.getElementById('myTable');
+                            t.classList.add('table-red');
+
+                            t.classList.remove('table-red');
+
         }
  function displayCockpit() 
         {
@@ -274,16 +319,56 @@ function getGamepadState()
                         let gamepad = gamepads[0];
                     
                     infotext='--------------------------------------------\n';
-                    infotext+=`  Button ${4}: ${gamepad.buttons[4].pressed} (Value: ${gamepad.buttons[4].value})\n`;
-                    infotext+=`  Button ${5}: ${gamepad.buttons[5].pressed} (Value: ${gamepad.buttons[5].value})\n`;
+                    
+                    infotext+=`  Button ${0}: ${gamepad.buttons[0].pressed} (Axis: ${gamepad.axes[0]})\n`;
                     infotext+=`  Button ${6}: ${gamepad.buttons[6].pressed} (Value: ${gamepad.buttons[6].value})\n`;
                     infotext+=`  Button ${7}: ${gamepad.buttons[7].pressed} (Value: ${gamepad.buttons[7].value})\n`;
 
-                    if (gamepad.buttons[4].pressed) { button1Clicked();};
+                    /*if (gamepad.buttons[4].pressed) { button1Clicked();};
                     if (gamepad.buttons[6].pressed) { button2Clicked();};
 
                     if (gamepad.buttons[5].pressed) { button3Clicked();};
                     if (gamepad.buttons[7].pressed) { button4Clicked();};
+                    */
+
+
+
+                    //value5=document.getElementById("tbl_servo1_angle").innerHTML;
+                    
+                    bSend=gamepad.buttons[0].value
+
+                    if (bSend==1) 
+                        {
+                            MOTORL_PWM_1=Math.trunc(gamepad.buttons[6].value*100)
+                            MOTORL_PWM_2=Math.trunc(gamepad.buttons[7].value*100)
+
+                            document.getElementById("slider1-value").innerHTML = MOTORL_PWM_1;
+                            document.getElementById("slider1").value = MOTORL_PWM_1;
+
+                            document.getElementById("slider2-value").innerHTML = MOTORL_PWM_2;                            
+                            document.getElementById("slider2").value = MOTORL_PWM_2;
+                                                                                                            
+                            document.getElementById("Lduty").innerHTML=MOTORL_PWM_1;
+                            document.getElementById("Lstatus").innerHTML=1;
+
+                            document.getElementById("Rduty").innerHTML=MOTORL_PWM_2;
+                            document.getElementById("Rstatus").innerHTML=1;
+
+                            servo1_angle=Math.trunc(gamepad.axes[0]*90+90);
+
+                            document.getElementById("slider_server1").value=servo1_angle;
+                            document.getElementById("lbl_servo1_angle").innerHTML=servo1_angle;
+                                //tbl_servo1_angle
+                            document.getElementById("tbl_servo1_angle").innerHTML=servo1_angle;
+
+                            const t = document.getElementById('myTable');
+                            t.classList.add('table-red');
+
+                            // later:
+                            // t.classList.remove('table-red');
+
+                            sendRequestFull();
+                        }
 
 
                     cockpitInfoDiv.innerText = infotext;
