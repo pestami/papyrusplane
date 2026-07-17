@@ -1,121 +1,55 @@
 <!DOCTYPE html>
-<html lang="en">
-<!---------------------------------------------------------------------------------------> 
+<html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <title>Thrust Pannels</title>
-   <style>
-        /* Style for the button */
-        button {
-            padding: 5px 5px;
-            font-size: 16px;
-            cursor: pointer;
-        }
+  <title>Vectored Thrust</title>
+  <style>
+    #mycanvas {
+      border: 2px solid black;
+    }
   </style>
 
-
-
-    <title>Gamepad API Example</title>
-    <style>
-        #gamepad-info {
-            font-family: monospace;
-        }
-    </style>
-
-    <script>
-        const t = document.getElementById('myTable');
-        t.classList.add('table-red');
-
-        // later:
-        // t.classList.remove('table-red');
-    </script>
-
-<style>
-  .table-red { background: #ffe5e5; }
-  .table-red td, .table-red th { color: #7a0000; }
-</style>
- 
 </head>
-<!---------------------------------------------------------------------------------------> 
-
-
-<!---------------------------------------------------------------------------------------> 
-
-
 <body>
-	<h1>WLAN - CONTROLLER Cockpit +Joy 2026/07/14 001</h1>
-
-
-<!--------------------------------------------------------------------------------
-=================================================================================
-SLIDERS  COCKPIT
-=================================================================================
---------------------------------------------------------------------------------> 
-
-
-<table id="myTable" style="border: 1px solid black; text-align: center">
-    <tr>
-        <td colspan="4"> <h1>WLAN - CONTROLLER</h1> </td>
-    </tr> 
-  <tr>
-    <td>    <span id="slider1-value">50</span>     </td>
-    <td>    </td>
-     <td>    </td>
-    <td>    <span id="slider2-value">50</span>     </td>
-  </tr>
-  <tr>
-    <td>
-      <input type="range" id="slider1" min="0" max="100" value="50" style="transform: rotate(-90deg); height: 200px; width: 200px;" onchange="slider1Changed(this.value)">
-      
-      </td>
-    <td>
-      <button id="button1" onclick="button1Clicked()">Engine Start</button><br>
-      <button id="button2" onclick="button2Clicked()">Engine Stop</button><br>
-
-    </td>
-     <td>
-
-      <button id="button3" onclick="button3Clicked()">Engine Start</button><br>
-      <button id="button4" onclick="button4Clicked()">Engine Stop</button>
-    </td>
-    <td>
-      <input type="range" id="slider2" min="0" max="100" value="50" style="transform: rotate(-90deg); height: 200px; width: 200px;" onchange="slider2Changed(this.value)">
+ 
+    
    
-      </td>
-  </tr>
-    <tr>
-        <td colspan="4">
-              <input type="range" id="slider_server1" min="0" max="180" value="90" style="height: 20px; width: 200px;" onchange="sliderservo1_Changed(this.value)">
-        
-    </tr> 
-  <tr>
-    <tr>
-        <td colspan="4">
-              
-        <span id="lbl_servo1_angle">90</span>
-    </tr> 
-  <tr>
-</table>
-
-<!-------------------------------------------------------------------------------->
-<div id="cockpit-info"></div>
-<!--------------------------------------------------------------------------------------->
-<table>	 	
-	 <tr >
+<table>	 	 <tr>
 		<td style="border: 1px solid black; text-align: centre" colspan="4">
-		<h3>Vectored Thrust</h3>  
-		</td>		
+		
+           <canvas id="mycanvas" width="600" height="600"> </canvas>
+		</td>
 	</tr>	
-    <tr>
-		<td style="border: 1px solid black"> Lduty %</td>
-		<td style="border: 1px solid black"> Lstatus </td>
-		<td style="border: 1px solid black"> Rduty %</td>
+	 <tr>
+		<td style="border: 1px solid black; text-align: centre" colspan="2">
+		<h3>Vectored Thrust</h3>  
+		</td>
+		<td style="border: 1px solid black; text-align: centre" colspan="2">
+		<button id="calibrate" onclick="calibrateClicked()">CALIBRATE</button>
+		</td>
+	</tr>	
+
+	 <tr>
+		<td style="border: 1px solid black; text-align: centre" colspan="2">
+		<p id="selected-point">SELECTED POINT</p>           
+		</td>
+		<td style="border: 1px solid black" colspan="1">
+		<p id="cal_x">0</p>    		  
+		</td>
+		<td style="border: 1px solid black" colspan="1">
+		<p id="cal_y">0</p>    
+		</td>
+		
+	</tr>	
+	<tr>
+		<td style="border: 1px solid black"> Lduty</td>
+		<td style="border: 1px solid black"> Lstatus</td>
+		<td style="border: 1px solid black"> Rduty</td>
 		<td style="border: 1px solid black"> Rstatus</td>
 		
 	</tr> 
-	<tr>
+		<tr>
 		<td style="border: 1px solid black" id="Lduty">0</td>
 		<td style="border: 1px solid black"  id="Lstatus">0</td>
 		<td style="border: 1px solid black"  id="Rduty">0</td>
@@ -123,23 +57,127 @@ SLIDERS  COCKPIT
 		
 	</tr> 
 	<tr>
-		<td style="border: 1px solid black"  colspan="2">Angle Servo 1 DEG</td>
-		<td style="border: 1px solid black"  colspan="2">Angle Servo 2 DEG</td>
-
-	</tr> 
-	<tr>
-		<td style="border: 1px solid black" id="tbl_servo1_angle" colspan="2">0</td>
-		<td style="border: 1px solid black"  id="tbl_servo2angle" colspan="2">0</td>
+		<td style="border: 1px solid black" id="pointx" colspan="2">0</td>
+		<td style="border: 1px solid black"  id="pointy" colspan="2">0</td>
 
 	</tr> 
 	<tr>
 		<td style="border: 1px solid black; text-align: centre" colspan="4">
-		<h3 id="jasonstring" >JASON STRING </h3> 
+		<h3 id="jasonstring" >J ASON STRING </h3> 
 		</td>
 	</tr>	
-</table>
-<!--------------------------------------------------------------------------------------->
-<script>
+</table>	
+
+	 <p id="DEBUG">debug</p>	
+	
+  <script>
+
+    let mycanvas = document.getElementById('mycanvas');
+    let ctx = mycanvas.getContext('2d');
+	mycanvas.style.background = "lightblue";
+    drawLine(500,0,500,600,5,"black");			
+	drawLine(0,500,600,500,5,"black");
+	
+    let selectedPoint = document.getElementById('selected-point');
+
+    // =============================Handle mouse click event
+    mycanvas.addEventListener('mousedown', 
+    function(event) 
+        {
+          let rect = mycanvas.getBoundingClientRect();
+			
+			Xmax = rect.width; 
+			Ymax = rect.height; 
+
+          let x =  + event.clientX-Number(cal_x.innerText) ; 
+		  // adjust x to be relative to the origin
+          let y = + event.clientY -Number(cal_y.innerText)  ; 
+		  // adjust y to be relative to the origin
+		   
+		 // alert( y)			
+			vector = [x, y]; // Original vector
+			
+			x_old=Number(pointx.innerText);
+			y_old=Number(pointy.innerText );
+			
+			
+			drawLine(0,0,x_old,y_old,4,"lightblue")	;
+			plotPoint(x_old,y_old,5,"grey");			
+				
+			plotPoint(x,y,4,"red");
+			drawLine(0,0,x,y,2,"orange");
+
+			drawLine(0,0,500,0,50,"black");			
+			drawLine(0,0,0,500,50,"black");
+			
+            if (x<500 && y<500)
+            {
+			drawLine(0,0,x,0,20,"green");
+			drawLine(0,0,0,y,20,"green");
+            }
+
+             if (x>500 )
+            {Lstatus.innerText=0;
+            }
+            else
+            {
+                Lstatus.innerText=1;
+            }
+            if (y>500 )
+            {
+			   Rstatus.innerText=0;
+            }
+            else
+            {   
+                Rstatus.innerText=1;
+            }
+
+			// Prepare JASON
+
+			Lduty.innerText = (x/500*100).toFixed(0);
+
+			Rduty.innerText = (y/500*100).toFixed(0);
+
+
+			
+			// Display the selected point value
+			sTEXT=`X: ${x.toFixed(0)} , Y: ${y.toFixed(0)} `;
+			selectedPoint.innerText = sTEXT;
+			
+			sTEXT='';
+			pointx.innerText = x.toFixed(0);
+			pointy.innerText = y.toFixed(0);
+			DEBUG.innerText = sTEXT;
+			
+			sendRequestFull();
+        }
+    );
+	//================================================================
+		function plotPoint(x, y, radius = 2,color) 
+		{
+		ctx.beginPath(); // Start a new path
+		ctx.arc(x, y, radius, 0, Math.PI * 2); // Create a circle
+		ctx.fillStyle = color; // Set the fill color
+		ctx.fill(); // Fill the circle
+		}
+
+		function drawLine(x1, y1, x2, y2, thickness, color) 
+			{
+            ctx.lineWidth = thickness; // Set the line thickness
+            ctx.strokeStyle = color; // Set the line color
+            ctx.beginPath(); // Start a new path
+            ctx.moveTo(x1, y1); // Move to the starting point
+            ctx.lineTo(x2, y2); // Draw a line to the ending point
+            ctx.stroke(); // Render the line		.stroke(); // Render the line
+			}
+		
+	// =============================Handle mouse click event
+	  function calibrateClicked() {
+				x_old=pointx.innerText;
+				y_old=pointy.innerText ;
+				cal_x.innerText =x_old;
+				cal_y.innerText =y_old;
+				}
 	//==============================================================
 	  function sendRequestFull() 
         {
@@ -147,37 +185,9 @@ SLIDERS  COCKPIT
             value2=document.getElementById("Lstatus").innerHTML;
             value3=document.getElementById("Rduty").innerHTML;
             value4=document.getElementById("Rstatus").innerHTML;
-            value5=document.getElementById("tbl_servo1_angle").innerHTML;
             
 			
-			jasonstring="Lduty: " + value1 + " ; " + "Lstatus: " + value2 + " ; " + "Rduty: " + value3 + " ; " + "Rstatus: " + value4 + " ; " + "Servo1: " + value5;
-			
-			document.getElementById("jasonstring").innerHTML= jasonstring;
-            
-            fetch('/api/pins', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                
-                body: JSON.stringify({ "MOTORL_PWM": value1, "MOTORL": value2, "MOTORR_PWM": value3, "MOTORR": value4 , "SERVOR": value5  })
-            })
-            .then(response => response.text())
-            .then(data => console.log(data))
-            .catch(error => console.error('Error:', error));
-		
-        }
-
-    function sendRequestjason(Lduty,Lstatus,Rduty,valuRstatuse1,tbl_servo1_angle) 
-        {
-            value1=Lduty;
-            value2=Lstatus;
-            value3=Rduty;
-            value4=Rstatus;
-            value5=tbl_servo1_angle;
-            
-			
-			jasonstring="Lduty: " + value1 + " ; " + "Lstatus: " + value2 + " ; " + "Rduty: " + value3 + " ; " + "Rstatus: " + value4 + " ; " + "Servo1: " + value5;
+			jasonstring="Lduty: " + value1 + " ; " + "Lstatus: " + value2 + " ; " + "Rduty: " + value3 + " ; " + "Rstatus: " + value4;
 			
 			document.getElementById("jasonstring").innerHTML= jasonstring;
             
@@ -187,224 +197,15 @@ SLIDERS  COCKPIT
                     'Content-Type': 'application/json'
                 },
                 
-                body: JSON.stringify({ "MOTORL_PWM": value1, "MOTORL": value2, "MOTORR_PWM": value3, "MOTORR": value4 , "SERVOR": value5  })
+                body: JSON.stringify({ "MOTORL_PWM": value1, "MOTORL": value2, "MOTORR_PWM": value3, "MOTORR": value4  })
             })
             .then(response => response.text())
             .then(data => console.log(data))
             .catch(error => console.error('Error:', error));
 		
         }
-
- 
+  
   </script>
 
-
-<!----===============USING SLIDERS================================================-------->
-<script>
-  function slider1Changed(value) {
-    console.log("Slider 1 changed to: " + value);
-      document.getElementById("slider1-value").innerHTML = value;
-    // Add your code here to handle the slider change event
-    Lduty.innerText=value
-    sendRequestFull();
-    
-  }
-
-  function slider2Changed(value) {
-    console.log("Slider 2 changed to: " + value);      
-    document.getElementById("slider2-value").innerHTML = value;
-    // Add your code here to handle the slider change event
-    Rduty.innerText=value
-    sendRequestFull();
-  }
-
-  function sliderservo1_Changed(value) {
-    console.log("Slider servo changed to: " + value);      
-    document.getElementById("lbl_servo1_angle").innerHTML = value;
-    // Add your code here to handle the slider change event
-    tbl_servo1_angle.innerText=value
-    sendRequestFull();
-  }
-
-  function button1Clicked() {
-    console.log("Button 1 clicked: Enable WLAN");
-    // Add your code here to handle the button click event
-      //sendRequest("LED",1);
-    Lstatus.innerText=1;
-    sendRequestFull();
-  }
-
-  function button2Clicked() {
-    console.log("Button 2 clicked: Disable WLAN");
-    // Add your code here to handle the button click event
-    Lstatus.innerText=0;
-    sendRequestFull();
-  }
-
-  function button3Clicked() {
-    console.log("Button 3 clicked: Restart WLAN");
-    // Add your code here to handle the button click event
-    Rstatus.innerText=1;
-    sendRequestFull();
-  }
-
-  function button4Clicked() {
-    console.log("Button 4 clicked: Reset WLAN");
-    // Add your code here to handle the button click event
-    Rstatus.innerText=0;
-    sendRequestFull();
-  }
-
-</script>
-<!----===========END====USING SLIDERS================================================-------->
-<!--------------------------------------------------------------------------------------->
-=================================================================
-<BR>
-<h1>Gamepad API Example 02</h1>
-<div id="gamepad-info"></div>
-<BR>
-=================================================================
-
-
-<script>
-function getGamepadState() 
-        {
-            let gamepads = navigator.getGamepads();
-
-            if (gamepads.length > 0 && gamepads[0] !== null) 
-                {
-                        if (gamepadIndex === null) 
-                        {
-                            gamepadIndex = gamepads[0].index;
-                        }
-                        displayGamepadInfo(gamepads[0]);
-                        displayCockpit();
-                } else 
-                {
-                    gamepadInfoDiv.innerText = 'No gamepad connected.';
-                    gamepadIndex = null;
-                }
-        }
- function displayGamepadInfo(gamepad) 
-        {
-            let info = `Gamepad ${gamepad.index}: ${gamepad.id}\n`;
-            info += `Buttons:\n`;
-
-            for (let i = 0; i < gamepad.buttons.length; i++) 
-            {
-                info += `  Button ${i}: ${gamepad.buttons[i].pressed} (Value: ${gamepad.buttons[i].value})\n`;
-            }
-            info += `Axes:\n`;
-            for (let i = 0; i < gamepad.axes.length; i++) 
-            {
-                info += `  Axis ${i}: ${gamepad.axes[i]}\n`;
-            }
-            gamepadInfoDiv.innerText = info;
-
-  //          infotext=`  Button ${4}: ${gamepad.buttons[4].pressed} (Value: ${gamepad.buttons[4].value})\n`;
-
-   //         cockpitInfoDiv.innerText =':' + infotext;
-
-                            const t = document.getElementById('myTable');
-                            t.classList.add('table-red');
-
-                            t.classList.remove('table-red');
-
-        }
- function displayCockpit() 
-        {
-            if (navigator.getGamepads) 
-                {   
-                        let gamepads = navigator.getGamepads();
-                        let gamepad = gamepads[0];
-                    
-                    infotext='--------------------------------------------\n';
-                    
-                    infotext+=`  Button ${0}: ${gamepad.buttons[0].pressed} (Axis: ${gamepad.axes[0]})\n`;
-                    infotext+=`  Button ${6}: ${gamepad.buttons[6].pressed} (Value: ${gamepad.buttons[6].value})\n`;
-                    infotext+=`  Button ${7}: ${gamepad.buttons[7].pressed} (Value: ${gamepad.buttons[7].value})\n`;
-
-                    /*if (gamepad.buttons[4].pressed) { button1Clicked();};
-                    if (gamepad.buttons[6].pressed) { button2Clicked();};
-
-                    if (gamepad.buttons[5].pressed) { button3Clicked();};
-                    if (gamepad.buttons[7].pressed) { button4Clicked();};
-                    */
-
-
-
-                    //value5=document.getElementById("tbl_servo1_angle").innerHTML;
-                    
-                    bSend=gamepad.buttons[0].value
-
-                    if (bSend==1) 
-                        {
-                            MOTORL_PWM_1=Math.trunc(gamepad.buttons[6].value*100)
-                            MOTORL_PWM_2=Math.trunc(gamepad.buttons[7].value*100)
-
-                            document.getElementById("slider1-value").innerHTML = MOTORL_PWM_1;
-                            document.getElementById("slider1").value = MOTORL_PWM_1;
-
-                            document.getElementById("slider2-value").innerHTML = MOTORL_PWM_2;                            
-                            document.getElementById("slider2").value = MOTORL_PWM_2;
-                                                                                                            
-                            document.getElementById("Lduty").innerHTML=MOTORL_PWM_1;
-                            document.getElementById("Lstatus").innerHTML=1;
-
-                            document.getElementById("Rduty").innerHTML=MOTORL_PWM_2;
-                            document.getElementById("Rstatus").innerHTML=1;
-
-                            servo1_angle=Math.trunc(gamepad.axes[0]*90+90);
-
-                            document.getElementById("slider_server1").value=servo1_angle;
-                            document.getElementById("lbl_servo1_angle").innerHTML=servo1_angle;
-                                //tbl_servo1_angle
-                            document.getElementById("tbl_servo1_angle").innerHTML=servo1_angle;
-
-                            const t = document.getElementById('myTable');
-                            t.classList.add('table-red');
-
-                            // later:
-                            // t.classList.remove('table-red');
-
-                            sendRequestFull();
-                        }
-
-
-                    cockpitInfoDiv.innerText = infotext;
-                } 
-                
-            else 
-                {
-                    cockpitInfoDiv.innerText = 'strange stuff';
-                }
-
-        }
-</script>
-<script>
-    let gamepadInfoDiv = document.getElementById('gamepad-info');
-
-    let cockpitInfoDiv = document.getElementById('cockpit-info');
-
-    let gamepadIndex = null;
-    // Check for gamepad support
-    if (navigator.getGamepads) 
-        {
-            // Get gamepad state on page load and on interval
-            getGamepadState();
-            setInterval(getGamepadState, 50);
-
-           
- 
-        } 
-    else 
-        {
-            gamepadInfoDiv.innerText = 'Gamepad API not supported.';
-        }
-//===========================================================================================================
-
-            
-</script>
-<!--------------------------------------------------------------------------------------->
 </body>
 </html>

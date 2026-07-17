@@ -213,6 +213,7 @@ async def handle_request(reader, writer):
         try:
             props = json.loads(body)
             #==MPA CODE===============================
+            print(props)
             mpa_machine.do_commands(props) 
             #========================================
             #for pin_name, new_value in props.items():
