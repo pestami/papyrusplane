@@ -1,211 +1,149 @@
 <!DOCTYPE html>
 <html>
+<!--------------------------------------------------------------------------------------->
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Vectored Thrust</title>
-  <style>
-    #mycanvas {
-      border: 2px solid black;
-    }
-  </style>
-
-</head>
-<body>
- 
-    
-   
-<table>	 	 <tr>
-		<td style="border: 1px solid black; text-align: centre" colspan="4">
-		
-           <canvas id="mycanvas" width="600" height="600"> </canvas>
-		</td>
-	</tr>	
-	 <tr>
-		<td style="border: 1px solid black; text-align: centre" colspan="2">
-		<h3>Vectored Thrust</h3>  
-		</td>
-		<td style="border: 1px solid black; text-align: centre" colspan="2">
-		<button id="calibrate" onclick="calibrateClicked()">CALIBRATE</button>
-		</td>
-	</tr>	
-
-	 <tr>
-		<td style="border: 1px solid black; text-align: centre" colspan="2">
-		<p id="selected-point">SELECTED POINT</p>           
-		</td>
-		<td style="border: 1px solid black" colspan="1">
-		<p id="cal_x">0</p>    		  
-		</td>
-		<td style="border: 1px solid black" colspan="1">
-		<p id="cal_y">0</p>    
-		</td>
-		
-	</tr>	
-	<tr>
-		<td style="border: 1px solid black"> Lduty</td>
-		<td style="border: 1px solid black"> Lstatus</td>
-		<td style="border: 1px solid black"> Rduty</td>
-		<td style="border: 1px solid black"> Rstatus</td>
-		
-	</tr> 
-		<tr>
-		<td style="border: 1px solid black" id="Lduty">0</td>
-		<td style="border: 1px solid black"  id="Lstatus">0</td>
-		<td style="border: 1px solid black"  id="Rduty">0</td>
-		<td style="border: 1px solid black"  id="Rstatus">0</td>
-		
-	</tr> 
-	<tr>
-		<td style="border: 1px solid black" id="pointx" colspan="2">0</td>
-		<td style="border: 1px solid black"  id="pointy" colspan="2">0</td>
-
-	</tr> 
-	<tr>
-		<td style="border: 1px solid black; text-align: centre" colspan="4">
-		<h3 id="jasonstring" >J ASON STRING </h3> 
-		</td>
-	</tr>	
-</table>	
-
-	 <p id="DEBUG">debug</p>	
-	
-  <script>
-
-    let mycanvas = document.getElementById('mycanvas');
-    let ctx = mycanvas.getContext('2d');
-	mycanvas.style.background = "lightblue";
-    drawLine(500,0,500,600,5,"black");			
-	drawLine(0,500,600,500,5,"black");
-	
-    let selectedPoint = document.getElementById('selected-point');
-
-    // =============================Handle mouse click event
-    mycanvas.addEventListener('mousedown', 
-    function(event) 
-        {
-          let rect = mycanvas.getBoundingClientRect();
-			
-			Xmax = rect.width; 
-			Ymax = rect.height; 
-
-          let x =  + event.clientX-Number(cal_x.innerText) ; 
-		  // adjust x to be relative to the origin
-          let y = + event.clientY -Number(cal_y.innerText)  ; 
-		  // adjust y to be relative to the origin
-		   
-		 // alert( y)			
-			vector = [x, y]; // Original vector
-			
-			x_old=Number(pointx.innerText);
-			y_old=Number(pointy.innerText );
-			
-			
-			drawLine(0,0,x_old,y_old,4,"lightblue")	;
-			plotPoint(x_old,y_old,5,"grey");			
-				
-			plotPoint(x,y,4,"red");
-			drawLine(0,0,x,y,2,"orange");
-
-			drawLine(0,0,500,0,50,"black");			
-			drawLine(0,0,0,500,50,"black");
-			
-            if (x<500 && y<500)
-            {
-			drawLine(0,0,x,0,20,"green");
-			drawLine(0,0,0,y,20,"green");
-            }
-
-             if (x>500 )
-            {Lstatus.innerText=0;
-            }
-            else
-            {
-                Lstatus.innerText=1;
-            }
-            if (y>500 )
-            {
-			   Rstatus.innerText=0;
-            }
-            else
-            {   
-                Rstatus.innerText=1;
-            }
-
-			// Prepare JASON
-
-			Lduty.innerText = (x/500*100).toFixed(0);
-
-			Rduty.innerText = (y/500*100).toFixed(0);
-
-
-			
-			// Display the selected point value
-			sTEXT=`X: ${x.toFixed(0)} , Y: ${y.toFixed(0)} `;
-			selectedPoint.innerText = sTEXT;
-			
-			sTEXT='';
-			pointx.innerText = x.toFixed(0);
-			pointy.innerText = y.toFixed(0);
-			DEBUG.innerText = sTEXT;
-			
-			sendRequestFull();
+    <title>WLAN-RELAY</title>
+    <style>
+        table { border-collapse: collapse; }
+        th, td {
+          border: 1px solid #ccc;
+          padding: 8px;
+          min-width: 90px;
         }
-    );
-	//================================================================
-		function plotPoint(x, y, radius = 2,color) 
-		{
-		ctx.beginPath(); // Start a new path
-		ctx.arc(x, y, radius, 0, Math.PI * 2); // Create a circle
-		ctx.fillStyle = color; // Set the fill color
-		ctx.fill(); // Fill the circle
-		}
+        td[contenteditable="true"] { background: #fafafa; }
+      </style>
 
-		function drawLine(x1, y1, x2, y2, thickness, color) 
-			{
-            ctx.lineWidth = thickness; // Set the line thickness
-            ctx.strokeStyle = color; // Set the line color
-            ctx.beginPath(); // Start a new path
-            ctx.moveTo(x1, y1); // Move to the starting point
-            ctx.lineTo(x2, y2); // Draw a line to the ending point
-            ctx.stroke(); // Render the line		.stroke(); // Render the line
-			}
-		
-	// =============================Handle mouse click event
-	  function calibrateClicked() {
-				x_old=pointx.innerText;
-				y_old=pointy.innerText ;
-				cal_x.innerText =x_old;
-				cal_y.innerText =y_old;
-				}
-	//==============================================================
-	  function sendRequestFull() 
-        {
-            value1=document.getElementById("Lduty").innerHTML;
-            value2=document.getElementById("Lstatus").innerHTML;
-            value3=document.getElementById("Rduty").innerHTML;
-            value4=document.getElementById("Rstatus").innerHTML;
-            
-			
-			jasonstring="Lduty: " + value1 + " ; " + "Lstatus: " + value2 + " ; " + "Rduty: " + value3 + " ; " + "Rstatus: " + value4;
-			
-			document.getElementById("jasonstring").innerHTML= jasonstring;
-            
-            fetch('/api/pins', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                
-                body: JSON.stringify({ "MOTORL_PWM": value1, "MOTORL": value2, "MOTORR_PWM": value3, "MOTORR": value4  })
-            })
-            .then(response => response.text())
-            .then(data => console.log(data))
-            .catch(error => console.error('Error:', error));
-		
-        }
+    <style>
+      #sendBtn{
+        appearance: none;
+        border: 0;
+        padding: 12px 18px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%);
+        color: #fff;
+        font-weight: 700;
+        cursor: pointer;
+        box-shadow: 0 10px 20px rgba(79, 70, 229, 0.25);
+        transition: transform .08s ease, box-shadow .15s ease, filter .15s ease;
+      }
+      #sendBtn:hover{
+        filter: brightness(1.05);
+        box-shadow: 0 14px 28px rgba(79, 70, 229, 0.28);
+      }
+      #sendBtn:active{
+        transform: translateY(1px);
+        box-shadow: 0 8px 16px rgba(79, 70, 229, 0.22);
+      }
+      #sendBtn:focus{
+        outline: 3px solid rgba(79, 70, 229, 0.35);
+        outline-offset: 2px;
+      }
+    </style>
+
+
+
+    </head>
+
+    <body>
+      <!--------------------------------------------------------------------------------------->
+      <h1>WLAN - CONTROLLER Cockpit</h1>
+
+      <table id="isdTable">
+        <thead>
+          <tr>
+            <th id="h_L_duty">L_duty</th>
+            <th id="h_L_enabled">L_enabled</th>
+            <th id="h_L_direction">L_direction</th>
+            <th id="h_R_duty">R_duty</th>
+            <th id="h_R_direction">R_direction</th>
+            <th id="h_R_enabled">R_enabled</th>
+            <th id="h_S_angle">S_angle</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr>
+            <td id="L_duty" contenteditable="true">0</td>
+            <td id="L_enabled" contenteditable="true">0</td>
+            <td id="L_direction" contenteditable="true">0</td>
+            <td id="R_duty" contenteditable="true">0</td>
+            <td id="R_direction" contenteditable="true">0</td>
+            <td id="R_enabled" contenteditable="true">0</td>
+            <td id="S_angle" contenteditable="true">0</td>
+          </tr>
+          <tr>
+            <td colspan="7" id="jasonstring" ></td>
+          </tr>
+          
+        </tbody>
+      </table>
+      <BR>
+      <!-- Add this button anywhere you want in the body -->
+    <button id="sendBtn" type="button">----------------Send---------------------</button>
+      <!--------------------------------------------------------------------------------------->
+    <body>
+
+    <!--------------------------------------------------------------------------------
+    =================================================================================
+    COCKPIT
+    =================================================================================
+    -------------->
+
+    <!--------------------------------------------------------------------------------------->
+    <script>
+      //==============================================================
+        function sendRequestFull() 
+              {
+                  value1=document.getElementById("L_duty").innerHTML;
+                  value2=document.getElementById("L_enabled").innerHTML;
+                  value3=document.getElementById("L_direction").innerHTML;
+                  value4=document.getElementById("R_duty").innerHTML;
+                  value5=document.getElementById("R_enabled").innerHTML;
+                  value6=document.getElementById("R_direction").innerHTML;
+                  value7=document.getElementById("S_angle").innerHTML;
+                  
+          
+          jasonstring1="L_duty: " + value1 +  ";" + "L_enabled: " + value2 + " ; " + "L_direction: " + value3 + " ; " ;
+          jasonstring2="R_duty: " + value4 +  ";" + "R_enabled: " + value5 + " ; " + "R_direction: " + value6 + " ; " ;
+        jasonstring=jasonstring1 +jasonstring2 +  "S_angle:" + value7
+          document.getElementById("jasonstring").innerHTML= jasonstring;
+
+
+                                     
+          //body: JSON.stringify({ "MOTORL_PWM": value1, "MOTORL_ENABLE": value2, "MOTORL_DIRECTION": value3, "MOTORR_PWM": value4, "MOTORR_ENABLE": value5, "MOTORR_DIRECTION": value6, "SERVO_A": value7 })
   
-  </script>
+                  fetch('/api/pins', {
+                      method: 'POST',
+                      headers: {
+                          'Content-Type': 'application/json'
+                      },
+                       body: JSON.stringify({ "MOTORL_PWM": value1, "MOTORL_ENABLE": value2, "MOTORL_DIRECTION": value3, "MOTORR_PWM": value4, "MOTORR_ENABLE": value5, "MOTORR_DIRECTION": value6, "SERVO_A": value7 })
+                  })
+                  .then(response => response.text())
+                  .then(data => console.log(data))
+                  .catch(error => console.error('Error:', error));
+          }
+     
+      </script>
+        <script>
+        const zeroIds = ["L_duty", "L_enabled", "L_direction", "R_duty", "R_direction", "R_enabled"];
+        zeroIds.forEach(id => {
+          document.getElementById(id).textContent = "0";
+        });
 
-</body>
-</html>
+        document.getElementById("S_angle").textContent = "90";
+      </script>
+
+      <script>
+      // Button click -> call your function
+      document.getElementById("sendBtn").addEventListener("click", () => {
+        sendRequestFull();
+      });
+    </script>
+
+    <!--------------------------------------------------------------------------------------->
+    <!--------------------------------------------------------------------------------------->
+    </body>
+    </html>

@@ -1,37 +1,66 @@
+//================================
+MicroPython v1.25.0 on 2025-04-15; Generic ESP32 module with ESP32
 
-from machine import Pin, PWM
-motor22 = PWM(Pin(22,Pin.OUT), freq = 100, duty = 0)
-motor22.duty(500)
-motor22.duty(0)
 
-motor19 = PWM(Pin(19,Pin.OUT), freq = 100, duty = 0)
-motor19.duty(500)
-motor19.duty(0)
-
-from machine import Pin, PWM
-motor23 = PWM(Pin(23,Pin.OUT), freq = 100, duty = 0)
-motor23.duty(500)
-motor23.duty(0)
-
-motor18 = PWM(Pin(18,Pin.OUT), freq = 100, duty = 0)
-motor18.duty(500)
-motor18.duty(0)
-
-pin22 = Pin(22, Pin.OUT)
-
-pin23 = Pin(23, Pin.OUT)
-
-pin22.value(1) 
-pin23.value(1) 
-
-pin22.value(0) 
-pin23.value(0)
-) 
-
+//=================================================================
 import machine
+from machine import Pin, PWM
+from DIYables_MicroPython_Servo import Servo
+
 machine.reset()
+//=================================================================
+servo = Servo(17)
+servo.move_to_angle(90)
+//=================================================================
+# LEFT
+motorL_FORWARD = PWM(Pin(19,Pin.OUT), freq = 20000, duty = 0)
+motorL_BACKWARD = PWM(Pin(13,Pin.OUT), freq = 20000, duty = 0)
 
+motorL_FORWARD.duty(1021)
+motorL_BACKWARD.duty(0)
 
+motorL_FORWARD.duty(0)
+motorL_BACKWARD.duty(1021)
+
+motorL_BACKWARD.duty(0)
+motorL_FORWARD.duty(0)
+=================================================================
+# RIGHT
+motorR_FORWARD = PWM(Pin(23,Pin.OUT), freq = 5000, duty = 0)MicroPython v1.25.0 on 2025-04-15; Generic ESP32 module with ESP32
+motorR_BACKWARD = PWM(Pin(18,Pin.OUT), freq = 5000, duty = 0)
+motorR_FORWARD.duty(0)
+motorR_BACKWARD.duty(1000)
+motorR_FORWARD.duty(1000)
+motorR_BACKWARD.duty(0)
+motorL_FORWARD = PWM(Pin(19,Pin.OUT), freq = 5000, duty = 0)
+==MOTOR LEFT===============
 pin19 = Pin(19, Pin.OUT)
+pin13 = Pin(13, Pin.OUT)
 pin19.value(1) 
 pin19.value(0) 
+
+pin13.value(1) 
+pin13.value(0) 
+
+==MOTOR RIGHT===============
+pin23 = Pin(23, Pin.OUT)
+pin18 = Pin(18, Pin.OUT)
+pin23.value(1) 
+pin23.value(0) 
+
+pin18.value(1) 
+pin18.value(0) 
+==============================
+
+
+
+
+
+
+
+
+
+
+
+pin13.value(1) 
+pin13.value(0) 

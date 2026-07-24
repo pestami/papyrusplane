@@ -1,214 +1,144 @@
 <!DOCTYPE html>
 <html>
-<!---------------------------------------------------------------------------------------> 
+<!--------------------------------------------------------------------------------------->
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Thrust Pannels</title>
-   <style>
-        /* Style for the button */
-        button {
-            padding: 5px 5px;
-            font-size: 16px;
-            cursor: pointer;
+    <title>WLAN-RELAY</title>
+    <style>
+        table { border-collapse: collapse; }
+        th, td {
+          border: 1px solid #ccc;
+          padding: 8px;
+          min-width: 90px;
         }
-  </style>
- 
-</head>
-<!---------------------------------------------------------------------------------------> 
+        td[contenteditable="true"] { background: #fafafa; }
+      </style>
+
+    <style>
+      #sendBtn{
+        appearance: none;
+        border: 0;
+        padding: 12px 18px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%);
+        color: #fff;
+        font-weight: 700;
+        cursor: pointer;
+        box-shadow: 0 10px 20px rgba(79, 70, 229, 0.25);
+        transition: transform .08s ease, box-shadow .15s ease, filter .15s ease;
+      }
+      #sendBtn:hover{
+        filter: brightness(1.05);
+        box-shadow: 0 14px 28px rgba(79, 70, 229, 0.28);
+      }
+      #sendBtn:active{
+        transform: translateY(1px);
+        box-shadow: 0 8px 16px rgba(79, 70, 229, 0.22);
+      }
+      #sendBtn:focus{
+        outline: 3px solid rgba(79, 70, 229, 0.35);
+        outline-offset: 2px;
+      }
+    </style>
 
 
-<!---------------------------------------------------------------------------------------> 
+
+    </head>
+
+    <body>
+      <!--------------------------------------------------------------------------------------->
+      <h1>WLAN - CONTROLLER Cockpit</h1>
+
+      <table id="isdTable">
+        <thead>
+          <tr>
+            <th id="h_L_duty">L_duty</th>
+            <th id="h_L_enabled">L_enabled</th>
+            <th id="h_L_direction">L_direction</th>
+            <th id="h_R_duty">R_duty</th>
+            <th id="h_R_direction">R_direction</th>
+            <th id="h_R_enabled">R_enabled</th>
+            <th id="h_S_angle">S_angle</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr>
+            <td id="L_duty" contenteditable="true"></td>
+            <td id="L_enabled" contenteditable="true"></td>
+            <td id="L_direction" contenteditable="true"></td>
+            <td id="R_duty" contenteditable="true"></td>
+            <td id="R_direction" contenteditable="true"></td>
+            <td id="R_enabled" contenteditable="true"></td>
+            <td id="S_angle" contenteditable="true"></td>
+          </tr>
+        </tbody>
+      </table>
+      <BR>
+      <!-- Add this button anywhere you want in the body -->
+    <button id="sendBtn" type="button">----------------Send---------------------</button>
+      <!--------------------------------------------------------------------------------------->
+    <body>
+
+    <!--------------------------------------------------------------------------------
+    =================================================================================
+    COCKPIT
+    =================================================================================
+    -------------->
+
+    <!--------------------------------------------------------------------------------------->
+    <script>
+      //==============================================================
+        function sendRequestFull() 
+              {
+                  value1=document.getElementById("L_duty").innerHTML;
+                  value2=document.getElementById("L_enabled").innerHTML;
+                  value3=document.getElementById("L_direction").innerHTML;
+                  value4=document.getElementById("R_duty").innerHTML;
+                  value5=document.getElementById("R_enabled").innerHTML;
+                  value6=document.getElementById("R_direction").innerHTML;
+                  value7=document.getElementById("S_angle").innerHTML;
+                  
+          
+          jasonstring1="L_duty: " + value1 +  ";" + "L_enabled: " + value2 + " ; " + "L_direction: " + value3 + " ; " ;
+          jasonstring2="R_duty: " + value4 +  ";" + "R_enabled: " + value5 + " ; " + "R_direction: " + value6 + " ; " ;
+        jasonstring=jasonstring1 +jasonstring2 + ";" +  "S_angle:" + value7
+          document.getElementById("jasonstring").innerHTML= jasonstring;
 
 
-<body>
-	<h1>WLAN - CONTROLLER Cockpit</h1>
+                  
+                  fetch('/api/pins', {
+                      method: 'POST',
+                      headers: {
+                          'Content-Type': 'application/json'
+                      },
+                      
+                      body: JSON.stringify({ "MOTORL_PWM": value1, "MOTORL_ENABLE": value2, "MOTORL_DIRECTION": value3, "MOTORR_PWM": value4, "MOTORR_ENABLE": value5, "MOTORR_DIRECTION": value6, "SERVO_A":vlaue7 })
+                  })
+                  .then(response => response.text())
+                  .then(data => console.log(data))
+                  .catch(error => console.error('Error:', error));
+          }
+     
+      </script>
+        <script>
+        const zeroIds = ["L_duty", "L_enabled", "L_direction", "R_duty", "R_direction", "R_enabled"];
+        zeroIds.forEach(id => {
+          document.getElementById(id).textContent = "0";
+        });
 
+        document.getElementById("S_angle").textContent = "90";
+      </script>
 
+      <script>
+      // Button click -> call your function
+      document.getElementById("sendBtn").addEventListener("click", () => {
+        sendRequestFull();
+      });
+    </script>
 
-<!--------------------------------------------------------------------------------
-=================================================================================
-SLIDERS  COCKPIT
-=================================================================================
---------------------------------------------------------------------------------> 
-
-
-<table style="border: 1px solid black; text-align: center">
-    <tr>
-        <td colspan="4"> <h1>WLAN - CONTROLLER</h1> </td>
-    </tr> 
-  <tr>
-    <td>    <span id="slider1-value">50</span>     </td>
-    <td>    </td>
-     <td>    </td>
-    <td>    <span id="slider2-value">50</span>     </td>
-  </tr>
-  <tr>
-    <td>
-      <input type="range" id="slider1" min="0" max="100" value="50" style="transform: rotate(-90deg); height: 200px; width: 200px;" onchange="slider1Changed(this.value)">
-      
-      </td>
-    <td>
-      <button id="button1" onclick="button1Clicked()">Engine Start</button><br>
-      <button id="button2" onclick="button2Clicked()">Engine Stop</button><br>
-
-    </td>
-     <td>
-
-      <button id="button3" onclick="button3Clicked()">Engine Start</button><br>
-      <button id="button4" onclick="button4Clicked()">Engine Stop</button>
-    </td>
-    <td>
-      <input type="range" id="slider2" min="0" max="100" value="50" style="transform: rotate(-90deg); height: 200px; width: 200px;" onchange="slider2Changed(this.value)">
-   
-      </td>
-  </tr>
-    <tr>
-        <td colspan="4">
-              <input type="range" id="slider_server1" min="0" max="180" value="0" style="height: 20px; width: 200px;" onchange="sliderservo1_Changed(this.value)">
-        
-    </tr> 
-  <tr>
-    <tr>
-        <td colspan="4">
-              
-        <span id="lbl_servo1_angle">0</span>
-    </tr> 
-  <tr>
-</table>
-
-<!--------------------------------------------------------------------------------
-
-<!--------------------------------------------------------------------------------------->
-<table>	 	
-	 <tr >
-		<td style="border: 1px solid black; text-align: centre" colspan="4">
-		<h3>Vectored Thrust</h3>  
-		</td>		
-	</tr>	
-<tr>
-		<td style="border: 1px solid black"> Lduty %</td>
-		<td style="border: 1px solid black"> Lstatus </td>
-		<td style="border: 1px solid black"> Rduty %</td>
-		<td style="border: 1px solid black"> Rstatus</td>
-		
-	</tr> 
-		<tr>
-		<td style="border: 1px solid black" id="Lduty">0</td>
-		<td style="border: 1px solid black"  id="Lstatus">0</td>
-		<td style="border: 1px solid black"  id="Rduty">0</td>
-		<td style="border: 1px solid black"  id="Rstatus">0</td>
-		
-	</tr> 
-	<tr>
-		<td style="border: 1px solid black"  colspan="2">Angle Servo 1 DEG</td>
-		<td style="border: 1px solid black"  colspan="2">Angle Servo 2 DEG</td>
-
-	</tr> 
-	<tr>
-		<td style="border: 1px solid black" id="tbl_servo1_angle" colspan="2">0</td>
-		<td style="border: 1px solid black"  id="tbl_servo2angle" colspan="2">0</td>
-
-	</tr> 
-	<tr>
-		<td style="border: 1px solid black; text-align: centre" colspan="4">
-		<h3 id="jasonstring" >JASON STRING </h3> 
-		</td>
-	</tr>	
-
-<!--------------------------------------------------------------------------------------->
-<script>
-	//==============================================================
-	  function sendRequestFull() 
-        {
-            value1=document.getElementById("Lduty").innerHTML;
-            value2=document.getElementById("Lstatus").innerHTML;
-            value3=document.getElementById("Rduty").innerHTML;
-            value4=document.getElementById("Rstatus").innerHTML;
-            value5=document.getElementById("tbl_servo1_angle").innerHTML;
-            
-			
-			jasonstring="Lduty: " + value1 + " ; " + "Lstatus: " + value2 + " ; " + "Rduty: " + value3 + " ; " + "Rstatus: " + value4 + " ; " + "Servo1: " + value5;
-			
-			document.getElementById("jasonstring").innerHTML= jasonstring;
-            
-            fetch('/api/pins', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                
-                body: JSON.stringify({ "MOTORL_PWM": value1, "MOTORL": value2, "MOTORR_PWM": value3, "MOTORR": value4 , "SERVOR": value5  })
-            })
-            .then(response => response.text())
-            .then(data => console.log(data))
-            .catch(error => console.error('Error:', error));
-		
-        }
-
- 
-  </script>
-
-
-<!----===============USING SLIDERS================================================-------->
-<script>
-  function slider1Changed(value) {
-    console.log("Slider 1 changed to: " + value);
-      document.getElementById("slider1-value").innerHTML = value;
-    // Add your code here to handle the slider change event
-    Lduty.innerText=value
-    sendRequestFull();
-    
-  }
-
-  function slider2Changed(value) {
-    console.log("Slider 2 changed to: " + value);      
-    document.getElementById("slider2-value").innerHTML = value;
-    // Add your code here to handle the slider change event
-    Rduty.innerText=value
-    sendRequestFull();
-  }
-
-  function sliderservo1_Changed(value) {
-    console.log("Slider servo changed to: " + value);      
-    document.getElementById("lbl_servo1_angle").innerHTML = value;
-    // Add your code here to handle the slider change event
-    tbl_servo1_angle.innerText=value
-    sendRequestFull();
-  }
-
-  function button1Clicked() {
-    console.log("Button 1 clicked: Enable WLAN");
-    // Add your code here to handle the button click event
-      //sendRequest("LED",1);
-    Lstatus.innerText=1;
-    sendRequestFull();
-  }
-
-  function button2Clicked() {
-    console.log("Button 2 clicked: Disable WLAN");
-    // Add your code here to handle the button click event
-    Lstatus.innerText=0;
-    sendRequestFull();
-  }
-
-  function button3Clicked() {
-    console.log("Button 3 clicked: Restart WLAN");
-    // Add your code here to handle the button click event
-    Rstatus.innerText=1;
-    sendRequestFull();
-  }
-
-  function button4Clicked() {
-    console.log("Button 4 clicked: Reset WLAN");
-    // Add your code here to handle the button click event
-    Rstatus.innerText=0;
-    sendRequestFull();
-  }
-
-</script>
-<!----===========END====USING SLIDERS================================================-------->
-<!--------------------------------------------------------------------------------------->
-<!--------------------------------------------------------------------------------------->
-</body>
-</html>
+    <!--------------------------------------------------------------------------------------->
+    <!--------------------------------------------------------------------------------------->
+    </body>
+    </html>
