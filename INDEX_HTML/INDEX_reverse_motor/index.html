@@ -65,14 +65,18 @@
 
         <tbody>
           <tr>
-            <td id="L_duty" contenteditable="true"></td>
-            <td id="L_enabled" contenteditable="true"></td>
-            <td id="L_direction" contenteditable="true"></td>
-            <td id="R_duty" contenteditable="true"></td>
-            <td id="R_direction" contenteditable="true"></td>
-            <td id="R_enabled" contenteditable="true"></td>
-            <td id="S_angle" contenteditable="true"></td>
+            <td id="L_duty" contenteditable="true">0</td>
+            <td id="L_enabled" contenteditable="true">0</td>
+            <td id="L_direction" contenteditable="true">0</td>
+            <td id="R_duty" contenteditable="true">0</td>
+            <td id="R_direction" contenteditable="true">0</td>
+            <td id="R_enabled" contenteditable="true">0</td>
+            <td id="S_angle" contenteditable="true">0</td>
           </tr>
+          <tr>
+            <td colspan="7" id="jasonstring" ></td>
+          </tr>
+          
         </tbody>
       </table>
       <BR>
@@ -103,18 +107,19 @@
           
           jasonstring1="L_duty: " + value1 +  ";" + "L_enabled: " + value2 + " ; " + "L_direction: " + value3 + " ; " ;
           jasonstring2="R_duty: " + value4 +  ";" + "R_enabled: " + value5 + " ; " + "R_direction: " + value6 + " ; " ;
-        jasonstring=jasonstring1 +jasonstring2 + ";" +  "S_angle:" + value7
+        jasonstring=jasonstring1 +jasonstring2 +  "S_angle:" + value7
           document.getElementById("jasonstring").innerHTML= jasonstring;
 
 
-                  
+                                     
+          //body: JSON.stringify({ "MOTORL_PWM": value1, "MOTORL_ENABLE": value2, "MOTORL_DIRECTION": value3, "MOTORR_PWM": value4, "MOTORR_ENABLE": value5, "MOTORR_DIRECTION": value6, "SERVO_A": value7 })
+  
                   fetch('/api/pins', {
                       method: 'POST',
                       headers: {
                           'Content-Type': 'application/json'
                       },
-                      
-                      body: JSON.stringify({ "MOTORL_PWM": value1, "MOTORL_ENABLE": value2, "MOTORL_DIRECTION": value3, "MOTORR_PWM": value4, "MOTORR_ENABLE": value5, "MOTORR_DIRECTION": value6, "SERVO_A":vlaue7 })
+                       body: JSON.stringify({ "MOTORL_PWM": value1, "MOTORL_ENABLE": value2, "MOTORL_DIRECTION": value3, "MOTORR_PWM": value4, "MOTORR_ENABLE": value5, "MOTORR_DIRECTION": value6, "SERVO_A": value7 })
                   })
                   .then(response => response.text())
                   .then(data => console.log(data))
